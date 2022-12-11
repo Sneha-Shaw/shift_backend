@@ -1,0 +1,8 @@
+# LOGIN USER
+POST http://localhost:5000/public/auth/login
+Content-Type: application/json
+
+{
+    "email": "janedoe@gmail.com",
+    "password": "12345"
+}

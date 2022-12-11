@@ -1,0 +1,35 @@
+
+# POST DATA TO ADD ADMIN 
+POST http://localhost:5000/public/admin/register
+Content-Type: application/json
+
+{
+    "email": "johndoe@gmail.com",
+    "mobile": "9876543210",
+    "password": "12345"
+}
+
+###
+
+# LOGIN ADMIN
+POST http://localhost:5000/public/admin/login
+Content-Type: application/json
+
+{
+    "email": "johndoe@gmail.com",
+    "password": "12345"
+}
+###
+# ADD DOCTOR
+POST http://localhost:5000/public/admin/add-doctor
+Content-Type: application/json
+
+{
+    "name": "Dr. Jane Doe",
+    "email": "janedoe@gmail.com",
+    "password": "12345",
+    "mobile": "9876543210",
+    "designation": "Senior",
+    "department": "Cardiologist",
+    "type": "contractual"
+}
