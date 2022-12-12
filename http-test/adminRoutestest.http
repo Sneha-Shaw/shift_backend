@@ -33,3 +33,46 @@ Content-Type: application/json
     "department": "Cardiologist",
     "type": "contractual"
 }
+
+###
+# ADD BREAK
+POST http://localhost:5000/public/admin/add-breaks
+Content-Type: application/json
+
+{
+    "breakName" : "Lunch Break",
+    "startTime": "1:00 PM",
+    "endTime": "2:00 PM",
+    "breakDuration": "1 hr",
+    "breakType": "Automatic",
+    "breakStatus": true
+}
+
+###
+# GET BREAK
+GET http://localhost:5000/public/admin/get-all-breaks
+Content-Type: application/json
+
+###
+# DELETE BREAK
+POST http://localhost:5000/public/admin/delete-break
+Content-Type: application/json
+
+{
+    "breakName": "Lunch Break"
+}
+
+###
+#UPDATE BREAK STATUS
+PUT http://localhost:5000/public/admin/update-break-status
+Content-Type: application/json
+
+{
+    "breakName": "Lunch Break",
+    "breakStatus": false
+}
+
+###
+#GET LEAVES
+GET http://localhost:5000/public/admin/get-all-leaves
+Content-Type: application/json
