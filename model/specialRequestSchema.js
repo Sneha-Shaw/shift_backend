@@ -2,11 +2,6 @@ import mongoose from 'mongoose'
 const schema = mongoose.Schema
 
 const specialRequestSchema = new schema({
-//   user name
-    userName: {
-        type: String,
-        required: true
-    },
 //   user account
     user: {
         type: mongoose.Schema.Types.ObjectId,
