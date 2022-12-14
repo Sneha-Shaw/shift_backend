@@ -1,5 +1,6 @@
 import ShiftModel from "../model/ShiftSchema.js";
 import adminAccount from '../model/adminAccountSchema.js'
+import CalendarModel from "../model/calendarSchema.js";
 import userAccount from '../model/userAccountSchema.js'
 import breakModel from '../model/breakSchema.js'
 import availabilityScheduleModel from '../model/AvailabilityScheduleSchema.js'
@@ -20,90 +21,102 @@ export const generateShift = async (req, res) => {
         console.log(getDoctor);
         // get doctor id
         const getDoctorId = getDoctor.map((doctor) => doctor._id)
-        console.log(getDoctorId);
+
         // get doctor names
         const getDoctorName = getDoctor.map((doctor) => doctor.name)
-        console.log(getDoctorName);
+        // console.log(getDoctorName);
         // getBreaks
         const getBreaks = await breakModel.find({})
-        console.log(getBreaks);
+
         // get breaks whose break status is true
         const getBreaksTrue = getBreaks.filter((breaks) => breaks.breakStatus === true)
-        console.log(getBreaksTrue);
-        // slot array with 1 hr diff start from 12 am and in 12 hour format
-        const slot = ["12:00 AM", "01:00 AM", "02:00 AM", "03:00 AM", "04:00 AM",
-            "05:00 AM", "06:00 AM", "07:00 AM", "08:00 AM", "09:00 AM",
-            "10:00 AM", "11:00 AM", "12:00 PM", "01:00 PM", "02:00 PM",
-            "03:00 PM", "04:00 PM", "05:00 PM", "06:00 PM", "07:00 PM",
-            "08:00 PM", "09:00 PM", "10:00 PM", "11:00 PM"]
-        console.log(slot);
-        // night duty
-        const nightDuty = ["12:00 AM", "01:00 AM", "02:00 AM", "03:00 AM", "04:00 AM",
-            "05:00 AM"]
-        console.log(nightDuty);
-        //day duty
-        const dayDuty = [ "05:00 AM","06:00 AM", "07:00 AM", "08:00 AM", "09:00 AM",
-            "10:00 AM", "11:00 AM", "12:00 PM", "01:00 PM", "02:00 PM",
-            "03:00 PM", "04:00 PM", "05:00 PM", "06:00 PM", "07:00 PM",
-            "08:00 PM", "09:00 PM", "10:00 PM", "11:00 PM","12:00 AM"]
-        console.log(dayDuty);
-        
-        // check if doctor is in availabilityScheduleModel for loop
-        // for (let i = 0; i < getDoctorId.length; i++) {
-        //     const checkDoctor = await availabilityScheduleModel.findOne({ user: getDoctorId[i] })
-        //     console.log(checkDoctor);
-        //     if (checkDoctor) {
-        //         // get schedule day
-        //         const getScheduleDay = getSchedule.map((schedule) => checkDoctor.schedule.day)
-        //         // get schedule start time
-        //         const getScheduleStartTime = getSchedule.map((schedule) => checkDoctor.schedule.startTime)
-        //         // get schedule end time
-        //         const getScheduleEndTime = getSchedule.map((schedule) => checkDoctor.schedule.endTime)
-        //         // create shift for every day in month by checking dioctor availability
-        //         for (let j = 0; j < getScheduleDay.length; j++) {
-        //             // get day
-        //             const getDay = getScheduleDay[j]
-        //             // get start time
-        //             const getStartTime = getScheduleStartTime[j]
-        //             // get end time
-        //             const getEndTime = getScheduleEndTime[j]
-        //             // get duration
-        //             const getDuration = getEndTime - getStartTime
-        //             // get start date
-        //             const getStartDate = new Date(2021, 0, getDay)
-        //             // get end date
-        //             const getEndDate = new Date(2021, 0, getDay)
-        //             // create shift
-        //             const newShift = new ShiftModel({
-        //                 shiftName: getDoctorName[i],
-        //                 shiftStartTime: getStartTime,
-        //                 shiftEndTime: getEndTime,
-        //                 shiftDuration: getDuration,
-        //                 shiftStartDate: getStartDate,
-        //                 shiftEndDate: getEndDate,
-        //                 shiftBreaks: getBreaks,
-        //                 doctors: getDoctorId[i],
-        //                 shiftStatus: "Approved"
-        //             })
-        //             // save shift
-        //             const saveShift = await newShift.save()
-        //             res.json({
-        //                 success: true,
-        //                 message: "Shift generated successfully!",
-        //                 saveShift
-        //             })
-        //         }
-        //     } 
-        //     else {
-        //         res.status(404).json({
-        //             success: false,
-        //             message: "Doctor not found!"
-        //         })
-        //     }
-        // }
 
+        //    night slot eg: 12:00 Am - 1:00AM
+        const nightSlot = ["12:00 AM - 01:00 AM", "01:00 AM - 02:00 AM", "02:00 AM - 03:00 AM", "03:00 AM - 04:00 AM", "04:00 AM - 05:00 AM",
+            "05:00 AM - 06:00 AM"]
+        //    day slot eg: 6:00AM - 7:00AM
+        const daySlot = ["06:00 AM - 07:00 AM", "07:00 AM - 08:00 AM", "08:00 AM - 09:00 AM", "09:00 AM - 10:00 AM",
+            "10:00 AM - 11:00 AM", "11:00 AM - 12:00 PM", "12:00 PM - 01:00 PM", "01:00 PM - 02:00 PM", "02:00 PM - 03:00 PM",
+            "03:00 PM - 04:00 PM", "04:00 PM - 05:00 PM", "05:00 PM - 06:00 PM", "06:00 PM - 07:00 PM", "07:00 PM - 08:00 PM",
+            "08:00 PM - 09:00 PM", "09:00 PM - 10:00 PM", "10:00 PM - 11:00 PM", "11:00 PM - 12:00 AM"]
+
+        // get all doctors schedule
+        for (let i = 0; i < getDoctorId.length; i++) {
+            const getDoctorSchedule = await availabilityScheduleModel.findOne({ user: getDoctorId[i] })
+
+            if (getDoctorSchedule) {
+                // get schedule day
+                const getScheduleDay = getDoctorSchedule.schedule.map((schedule) => schedule.day)
+                console.log(getScheduleDay);
+                // get schedule start time
+                const getScheduleStartTime = getDoctorSchedule.schedule.map((schedule) => schedule.start)
+                console.log(getScheduleStartTime);
+                // get schedule end time
+                const getScheduleEndTime = getDoctorSchedule.schedule.map((schedule) => schedule.end)
+                console.log(getScheduleEndTime);
+                // create shift for every day in month by checking doctor availability
+            }
+
+        }
+        const currentMonth = new Date().getMonth()
+
+//   get full calendar by calling diff api
+        const getCalendar = await CalendarModel.findOne({})
+        // get calendar array
+        const getCalendarArray = getCalendar.calendarArray
+        console.log(getCalendarArray);
     }
     catch (err) {
         res.status(400).json({ message: err.message })
     }
 }
+
+// @route: POST /shift/generate-calendar
+// @purpose: : post routes to generate calendar of a month for current year and month
+export const generateCalendar = async (req, res) => {
+    const {currentMonth} = req.body
+    try {
+        // get current year
+        const currentYear = new Date().getFullYear()
+        // get current month
+        // const currentMonth = new Date().getMonth()
+        // get current date
+        const currentDate = new Date().getDate()
+        // get total number of days in a month
+        const totalDays = new Date(currentYear, currentMonth + 1, 0).getDate()
+        // create array of days
+        const daysArray = [...Array(totalDays).keys()].map((i) => i + 1)
+        // create calendar array
+        const calendarArray = daysArray.map((day) => {
+            const date = new Date(currentYear, currentMonth, day)
+            const getDay = date.getDay()
+            const dayName = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][getDay]
+            const dayNumber = day
+            const dayMonth = currentMonth + 1
+            const dayYear = currentYear
+            return {
+                dayName,
+                dayNumber,
+                dayMonth,
+                dayYear
+            }
+        })
+        const newCalendar =  new CalendarModel({
+            calendarArray: calendarArray
+        })
+        // save calendar array
+        const saveCalendar = await newCalendar.save()
+        // console.log(saveCalendar);
+        // send calendar array
+        res.status(200).json({
+            success: true,
+            message: "Calendar generated successfully!",
+            saveCalendar
+        })
+    }
+    catch (err) {
+        res.status(400).json({ message: err.message })
+    }
+}
+
+        
