@@ -6,7 +6,7 @@ Content-Type: application/json
 {
     "email": "johndoe@gmail.com",
     "mobile": "9876543210",
-    "password": "12345"
+    "password": "12345",
 }
 
 ###
@@ -31,9 +31,21 @@ Content-Type: application/json
     "mobile": "9876543210",
     "designation": "Senior",
     "department": "Cardiologist",
-    "type": "contractual"
+    "type": "contractual",
+    "dutyHoursPerMonth": 180,
+    "dutyHoursPerDay": 8
 }
 
+###
+# Update doctor
+PUT http://localhost:5000/public/admin/update-doctor
+Content-Type: application/json
+
+{
+    "email": "janedoe@gmail.com",
+    "dutyHoursPerMonth": "180",
+    "dutyHoursPerDay": "8 hrs"
+}
 ###
 # ADD BREAK
 POST http://localhost:5000/public/admin/add-breaks

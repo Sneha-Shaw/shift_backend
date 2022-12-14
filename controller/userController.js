@@ -268,3 +268,17 @@ export const addAvailability = async (req, res) => {
         }
     }
 }
+
+// @route: GET /auth/:id/get-availability   
+// @purpose: : get routes for  user to get availability
+export const getAvailability = async (req, res) => {
+    try {
+        const id = req.params.id
+        const getAvailability = await availabilityScheduleModel
+            .find({ user: id })
+            .populate('user', 'name email mobile')
+        res.status(200).json(getAvailability)
+    } catch (error) {
+        res.status(404).json({ message: error.message })
+    }
+}

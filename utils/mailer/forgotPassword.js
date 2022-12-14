@@ -30,7 +30,7 @@ export default async function sendmail(checkEmail) {
         })
 
         const mailOptions = {
-            from: 'Matricula <snehashaw122@gmail.com>',
+            from: 'Matricula <subhamkumar172214@gmail.com>',
             to: checkEmail.email,
             subject: `${checkEmail.username}, here's your PIN`,
             html: `<div style="width:100%; height:100vh; display:flex; aligh-item:center; justify-content:center; background:#f9f9f9;">

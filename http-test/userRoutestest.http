@@ -56,3 +56,11 @@ Content-Type: application/json
         }
     ]
 }
+
+###
+
+# GET AVAILABILITY
+GET http://localhost:5000/public/auth/6395f4b82fb301eb92489e01/get-availability
+Content-Type: application/json
+###
+

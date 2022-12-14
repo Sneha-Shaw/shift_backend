@@ -83,7 +83,9 @@ export const addDoctor = async (req, res) => {
         password,
         department,
         designation,
-        type
+        type,
+        dutyHoursPerMonth,
+        dutyHoursPerDay
     } = req.body
     // const doctorexists
     const doctorexists = await userAccount.findOne({ email: email })
@@ -101,7 +103,9 @@ export const addDoctor = async (req, res) => {
             password,
             department,
             designation,
-            type
+            type,
+            dutyHoursPerMonth,
+            dutyHoursPerDay
         })
         createDoctor.save()
         if (createDoctor) {
@@ -152,7 +156,9 @@ export const updateDoctor = async (req, res) => {
         password,
         department,
         designation,
-        type
+        type,
+        dutyHoursPerMonth,
+        dutyHoursPerDay
     } = req.body
     const updateDoctor = await userAccount.findOne
         ({
@@ -166,6 +172,8 @@ export const updateDoctor = async (req, res) => {
         updateDoctor.department = department
         updateDoctor.designation = designation
         updateDoctor.type = type
+        updateDoctor.dutyHoursPerMonth = dutyHoursPerMonth
+        updateDoctor.dutyHoursPerDay = dutyHoursPerDay
         updateDoctor.save()
         res.json({
             success: true,

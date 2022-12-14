@@ -30,6 +30,13 @@ const userAcSchema = new schema({
         default: 'permanent',
         enum: ['permanent', 'contractual']
     },
+    dutyHoursPerMonth:{
+        type: Number,
+        default: 192
+    },
+    dutyHoursPerDay:{
+        type: Number
+    },
     RegisteredAt: {
         type: Date,
         default: Date.now

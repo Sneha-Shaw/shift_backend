@@ -24,7 +24,7 @@ route.post('/login', loginAdmin)
 // doctor
 route.post('/add-doctor', addDoctor)
 route.post('/delete-doctor/:id', deleteDoctor)
-route.put('/update-doctor/:id', updateDoctor)
+route.put('/update-doctor', updateDoctor)
 route.get('/get-all-doctors', getAllDoctors)
 route.get('/get-doctor/:id', getDoctorById)
 // break
