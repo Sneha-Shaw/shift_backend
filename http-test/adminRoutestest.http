@@ -25,15 +25,14 @@ POST http://localhost:5000/public/admin/add-doctor
 Content-Type: application/json
 
 {
-    "name": "Dr. Jane Doe",
-    "email": "janedoe@gmail.com",
-    "password": "12345",
+    "name": "Dr. Shaan Sharma",
+    "email": "shaan@gmail.com",
+    "password": "1245",
     "mobile": "9876543210",
     "designation": "Senior",
-    "department": "Cardiologist",
-    "type": "contractual",
-    "dutyHoursPerMonth": 180,
-    "dutyHoursPerDay": 8
+    "department": "Some",
+    "type": "permanent",
+    "dutyHoursPerDay": 7
 }
 
 ###
@@ -52,10 +51,10 @@ POST http://localhost:5000/public/admin/add-breaks
 Content-Type: application/json
 
 {
-    "breakName" : "Lunch Break",
-    "startTime": "1:00 PM",
-    "endTime": "2:00 PM",
-    "breakDuration": "1 hr",
+    "breakName" : "Tea Break",
+    "startTime": "5:00 PM",
+    "endTime": "5:30 PM",
+    "breakDuration": "30 min",
     "breakType": "Automatic",
     "breakStatus": true
 }

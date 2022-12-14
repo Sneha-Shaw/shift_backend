@@ -30,7 +30,7 @@ export default async function sendmail(createUserAccount) {
         })
 
         const mailOptions = {
-            from: 'Tricog <subhamkumar172214@gmail.com>',
+            from: 'Tricog <shubhamkumar172214@gmail.com>',
             to: email,
             subject: 'Account credentials',
             html: `<div><h2>Hi ${createUserAccount.name}!</h2>
