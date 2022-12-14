@@ -218,3 +218,53 @@ export const ShiftReplace = async (req, res) => {
         })
     }
 }
+
+//@route: POST /auth/:id/add-availability
+//@purpose: : post routes for  user to add availability
+export const addAvailability = async (req, res) => {
+    const { schedule } = req.body
+    const id = req.params.id
+    // check if user exists
+    const checkUser = await userAccount
+        .findById(id)
+    if (isEmpty(checkUser)) {
+        res.status(404).json({
+            success: false,
+            message: "User not found!"
+        })
+    }
+    else {
+// if user is already in the availability model then edit it according to the input else create a new
+        const checkAvailability = await availabilityScheduleModel
+            .findOne({ user: id })
+        if (isEmpty(checkAvailability)) {
+            const newAvailability = new availabilityScheduleModel({
+                schedule,
+                user: id
+            })
+            const saveAvailability = await newAvailability.save()
+            res.json({
+                success: true,
+                message: "Availability added successfully!",
+                saveAvailability
+            })
+        }
+        else {
+            const editAvailability = await availabilityScheduleModel
+                .findOneAndUpdate(
+                    { user: id },
+                    {
+                        schedule
+                    },
+                    {
+                        new: true
+                    }
+                )
+            res.json({
+                success: true,
+                message: "Availability edited successfully!",
+                editAvailability
+            })
+        }
+    }
+}

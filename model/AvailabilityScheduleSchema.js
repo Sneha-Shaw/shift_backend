@@ -7,25 +7,19 @@ const availabilityScheduleSchema = new schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "UserAccount",
     },
-    //    schedule contains a day in which contains array of start and end time
+    //    schedule contains a day and time which contains array of start and end time
     schedule: [
         {
             day: {
                 type: String,
-                
             },
-            time: [
-                {
-                    start: {
-                        type: String,
-                        
-                    },
-                    end: {
-                        type: String,
-                        
-                    }
-                }
-            ]
+
+            start: {
+                type: String,
+            },
+            end: {
+                type: String,
+            }
         }
     ],
     //   date created

@@ -25,3 +25,34 @@ Content-Type: application/json
     "start": "10:00 AM",
     "end": "1:00 PM"
 }
+
+###
+
+# ADD AVAILABILITY
+POST http://localhost:5000/public/auth/6395f4b82fb301eb92489e01/add-availability
+Content-Type: application/json
+
+{
+    "schedule":[
+        {
+            "day": "Monday",
+            "start": "10:00 AM",
+            "end": "1:00 PM"
+        },
+        {
+            "day": "Tuesday",
+            "start": "10:00 AM",
+            "end": "1:00 PM"
+        },
+        {
+            "day": "Wednesday",
+            "start": "10:00 AM",
+            "end": "1:00 PM"
+        },
+        {
+            "day": "Thursday",
+            "start": "10:00 AM",
+            "end": "1:00 PM"
+        }
+    ]
+}

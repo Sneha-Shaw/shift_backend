@@ -9,7 +9,8 @@ import {
     getLeaves,
     requestSpecial,
     getSpecialRequests,
-    ShiftReplace
+    ShiftReplace,
+    addAvailability
 } from '../../controller/userController.js'
 const route = express.Router()
 
@@ -27,5 +28,7 @@ route.post('/:id/special-request', requestSpecial)
 route.get('/:id/get-special-requests', getSpecialRequests)
 // shift replace
 route.post('/:id/shift-replace', ShiftReplace)
+// add availability
+route.post('/:id/add-availability', addAvailability)
 
 export default route
