@@ -6,25 +6,34 @@ const slotSchema = new schema({
         type: String,
         required: true
     },
-    DoctorsNeeded:{
-        type: Number
-    },
-    SeniorNeeded:{
-        type: Number
-    },
-    // get date by ref Calendar
-    calendarId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Calendar"
-    },
-    // ref Doctor
-    doctorId: [
+//    store doctorneeded and doctor alloted and isfulfilled for a date in an array
+    Allotment:[
         {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Doctor"
+            DoctorsNeeded: {
+                type: Number
+            },
+            SeniorNeeded: {
+                type: Number
+            },
+            DoctorsAlloted:{
+                type: Number,
+                default: 0
+            },
+            SeniorAlloted:{
+                type: Number,
+                default: 0
+            },
+            isFulfilled: {
+                type: Boolean,
+                default: false
+            },
+           date:{
+                type: Number,
+                default: 1
+           }
         }
     ],
-    isNight:{
+    isNight: {
         type: Boolean,
         required: true
     }

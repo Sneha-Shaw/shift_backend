@@ -16,8 +16,7 @@ const shiftSchema = new schema({
         required: true
     },
     shiftDuration: {
-        type: Number,
-        required: true
+        type: Number
     },
     shiftStartDate:{
         type: Date,
@@ -37,10 +36,14 @@ const shiftSchema = new schema({
             ref: "UserAccount"
         }
     ],
+    slot:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Slot"
+    },
     shiftStatus:{
         type: String,
-        default: "Approved",
-        enum: ["Approved", "Pending", "Rejected"]
+        default: "Awaiting",
+        enum: ["Approved", "Awaiting", "Declined"]
     }
 });
 
