@@ -74,6 +74,7 @@ export const generateShift = async (req, res) => {
 
                         // get dayName for the dayNumber i
                         const getDayName = getCalendarArray[i - 1].dayName
+                        console.log(getDayName, getCalendarArray[i - 1]);
 
                         // check if current day is in doctors schedule
                         if (getDoctorScheduleArrayDay.includes(getDayName)) {
@@ -125,8 +126,8 @@ export const generateShift = async (req, res) => {
                                         // check if duty hours alloted is less than dutyHoursPerday
                                         if (getDoctor[k].dutyHoursAllotedPerDay < getDoctor[k].dutyHoursPerDay) {
 
-                                            const shiftStartDate = i + '/' + currentMonth + '/' + new Date().getFullYear()
-                                            const shiftEndDate = i + '/' + currentMonth + '/' + new Date().getFullYear()
+                                            const shiftStartDate = i + '/' + (currentMonth + 1) + '/' + new Date().getFullYear()
+                                            const shiftEndDate = i + '/' + (currentMonth + 1) + '/' + new Date().getFullYear()
 
                                             const shiftStartTime = getSlotStartHour + ' ' + getSlotStartAmPm
 
@@ -199,8 +200,8 @@ export const generateShift = async (req, res) => {
                                             // check if duty hours alloted is less than dutyHoursPerday
                                             if (getDoctor[k].dutyHoursAllotedPerDay < getDoctor[k].dutyHoursPerDay) {
 
-                                                const shiftStartDate = i + '/' + currentMonth + '/' + new Date().getFullYear()
-                                                const shiftEndDate = i + '/' + currentMonth + '/' + new Date().getFullYear()
+                                                const shiftStartDate = i + '/' + (currentMonth + 1) + '/' + new Date().getFullYear()
+                                                const shiftEndDate = i + '/' + (currentMonth + 1) + '/' + new Date().getFullYear()
 
                                                 const shiftStartTime = getSlotStartHour + ' ' + getSlotStartAmPm
 
@@ -400,7 +401,10 @@ export const updateSlot = async (req, res) => {
                         }, {
                             $set: {
                                 "Allotment.$.DoctorsNeeded": Allotment[0].DoctorsNeeded,
-                                "Allotment.$.SeniorNeeded": Allotment[0].SeniorNeeded
+                                "Allotment.$.SeniorNeeded": Allotment[0].SeniorNeeded,
+                                "Allotment.$.DoctorsAlloted": Allotment[0].DoctorsAlloted,
+                                "Allotment.$.SeniorAlloted": Allotment[0].SeniorAlloted,
+                                "Allotment.$.isFulfilled": Allotment[0].isFulfilled
                             }
                         }, {
                             new: true

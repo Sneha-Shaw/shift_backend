@@ -37,3 +37,22 @@ Content-Type: application/json
     ],
     "slotTime": "11:00 PM - 12:00 AM"
 }
+
+###
+# update slot
+
+PUT  http://localhost:5000/private/shift/update-slot
+Content-Type: application/json
+
+{
+    "Allotment":[
+        {
+            "DoctorsAlloted": 0,
+            "isFulfilled": false,
+            "date": 1
+        }
+    ],
+    "slotTime": "10:00 PM - 11:00 PM"
+}
+
+###
