@@ -30,10 +30,10 @@ Content-Type: application/json
 {
     "Allotment":[
         {
-            "DoctorsNeeded": 7,
-            "SeniorNeeded": 1,
+            "DoctorsNeeded": 3,
+            "SeniorNeeded": 0,
             "date": 1
         }
     ],
-    "slotTime": "12:00 AM - 01:00 AM"
+    "slotTime": "11:00 PM - 12:00 AM"
 }

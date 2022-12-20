@@ -19,11 +19,11 @@ const shiftSchema = new schema({
         type: Number
     },
     shiftStartDate:{
-        type: Date,
+        type: String,
         required: true
     },
     shiftEndDate:{
-        type: Date,
+        type: String,
         required: true
     },
     shiftBreaks:{
