@@ -13,33 +13,33 @@ env.config()
 //@route: POST /auth/generate-shift
 //@purpose: : post routes to generate shift of a month with respective days by checking in doctors schedule and available slot time
 export const generateShift = async (req, res) => {
-    // const { date } = req.body
+    // var { date } = req.body
 
     try {
 
         // get all doctors
-        const getDoctor = await userAccount.find({})
+        var getDoctor = await userAccount.find({})
 
         // get doctor id
-        const getDoctorId = getDoctor.map((doctor) => doctor._id)
+        var getDoctorId = getDoctor.map((doctor) => doctor._id)
 
         // get doctor names
-        const getDoctorName = getDoctor.map((doctor) => doctor.name)
+        var getDoctorName = getDoctor.map((doctor) => doctor.name)
         // console.log(getDoctorName);
         // getBreaks
-        const getBreaks = await breakModel.find({})
+        var getBreaks = await breakModel.find({})
 
         // get breaks whose break status is true
-        const getBreaksTrue = getBreaks.filter((breaks) => breaks.breakStatus === true)
+        var getBreaksTrue = getBreaks.filter((breaks) => breaks.breakStatus === true)
 
         // get slot
-        const getSlot = await SlotModel.find({})
+        var getSlot = await SlotModel.find({})
 
         // get all doctors schedule
-        const currentMonth = new Date().getMonth()
+        var currentMonth = new Date().getMonth()
 
         // get calender of current month
-        const getCalendar = await CalendarModel.findOne({
+        var getCalendar = await CalendarModel.findOne({
             calendarArray: {
                 $elemMatch: {
                     dayMonth: currentMonth + 1
@@ -47,74 +47,74 @@ export const generateShift = async (req, res) => {
             }
         })
         // get calendar array
-        const getCalendarArray = getCalendar.calendarArray
+        var getCalendarArray = getCalendar.calendarArray
         // get the total no days in the month
-        const totalDays = getCalendarArray.length
+        var totalDays = getCalendarArray.length
 
         // Traverse through 1 to total days
         for (let i = 1; i <= 5; i++) {
             // Traverse through all slots
+            var dutyHoursAllotedPerDay = 0
             for (let j = 0; j < 24; j++) {
                 if (getSlot[j]?.Allotment[i - 1]?.isFulfilled != true) {
                     // Traverse through all doctors
                     for (let k = 0; k < getDoctorId.length; k++) {
                         // get current doctors schdule
-                        const getDoctorSchedule = await availabilityScheduleModel.findOne({
+                        var getDoctorSchedule = await availabilityScheduleModel.findOne({
                             user: getDoctorId[k]
                         })
 
                         // get current doctors schedule array day
-                        const getDoctorScheduleArrayDay = getDoctorSchedule.schedule.map((day) => day.day)
+                        var getDoctorScheduleArrayDay = getDoctorSchedule.schedule.map((day) => day.day)
 
                         // get current doctors schedule array start time
-                        const getDoctorScheduleArrayStartTime = getDoctorSchedule.schedule.map((day) => day.start)
+                        var getDoctorScheduleArrayStartTime = getDoctorSchedule.schedule.map((day) => day.start)
 
                         // get current doctors schedule array end time
-                        const getDoctorScheduleArrayEndTime = getDoctorSchedule.schedule.map((day) => day.end)
+                        var getDoctorScheduleArrayEndTime = getDoctorSchedule.schedule.map((day) => day.end)
 
                         // get dayName for the dayNumber i
-                        const getDayName = getCalendarArray[i - 1].dayName
-                        console.log(getDayName, getCalendarArray[i - 1]);
+                        var getDayName = getCalendarArray[i - 1].dayName
 
                         // check if current day is in doctors schedule
                         if (getDoctorScheduleArrayDay.includes(getDayName)) {
                             // get index of current day in doctors schedule array
-                            const getDayIndex = getDoctorScheduleArrayDay.indexOf(getDayName)
+                            var getDayIndex = getDoctorScheduleArrayDay.indexOf(getDayName)
 
                             // get start time of current day
-                            const getStartTime = getDoctorScheduleArrayStartTime[getDayIndex]
+                            var getStartTime = getDoctorScheduleArrayStartTime[getDayIndex]
                             // get hour
-                            const getStartHour = getStartTime[0] + getStartTime[1]
+                            var getStartHour = getStartTime[0] + getStartTime[1]
                             // parseaint gethour
-                            const IntgetStartHour = parseInt(getStartHour)
+                            var IntgetStartHour = parseInt(getStartHour)
                             // get Am or Pm
-                            const getStartAmPm = getStartTime[getStartTime.length - 2] + getStartTime[getStartTime.length - 1]
+                            var getStartAmPm = getStartTime[getStartTime.length - 2] + getStartTime[getStartTime.length - 1]
                             // get end time of current day
-                            const getEndTime = getDoctorScheduleArrayEndTime[getDayIndex]
+                            var getEndTime = getDoctorScheduleArrayEndTime[getDayIndex]
                             // get hour
-                            const getEndHour = getEndTime[0] + getEndTime[1]
+                            var getEndHour = getEndTime[0] + getEndTime[1]
                             // parseaint gethour
-                            const IntgetEndHour = parseInt(getEndHour)
+                            var IntgetEndHour = parseInt(getEndHour)
                             // get end am or pm
-                            const getEndAmPm = getEndTime[getEndTime.length - 2] + getEndTime[getEndTime.length - 1]
+                            var getEndAmPm = getEndTime[getEndTime.length - 2] + getEndTime[getEndTime.length - 1]
 
 
-                            const splitSlot = getSlot[j].slotTime.split(' - ');
-                            const slotStartTime = splitSlot[0];
+                            var splitSlot = getSlot[j].slotTime.split(' - ');
+                            var slotStartTime = splitSlot[0];
                             // get Start hr
-                            const getSlotStartHour = slotStartTime[0] + slotStartTime[1]
+                            var getSlotStartHour = slotStartTime[0] + slotStartTime[1]
                             // parseaint gethour
-                            const IntgetSlotStartHour = parseInt(getSlotStartHour)
+                            var IntgetSlotStartHour = parseInt(getSlotStartHour)
                             // get Am or Pm
-                            const getSlotStartAmPm = slotStartTime[slotStartTime.length - 2] + slotStartTime[slotStartTime.length - 1]
+                            var getSlotStartAmPm = slotStartTime[slotStartTime.length - 2] + slotStartTime[slotStartTime.length - 1]
 
-                            const slotEndTime = splitSlot[1];
+                            var slotEndTime = splitSlot[1];
                             // get end hr
-                            const getSlotEndHour = slotEndTime[0] + slotEndTime[1]
+                            var getSlotEndHour = slotEndTime[0] + slotEndTime[1]
                             // parseint gethour
-                            const IntgetSlotEndHour = parseInt(getSlotEndHour)
+                            var IntgetSlotEndHour = parseInt(getSlotEndHour)
                             // get end am or pm
-                            const getSlotEndAmPm = slotEndTime[slotEndTime.length - 2] + slotEndTime[slotEndTime.length - 1]
+                            var getSlotEndAmPm = slotEndTime[slotEndTime.length - 2] + slotEndTime[slotEndTime.length - 1]
 
                             if (getSlot[j].isNight === true) {
                                 console.log('night');
@@ -124,17 +124,19 @@ export const generateShift = async (req, res) => {
                                     // check if duty hours alloted is less than dutyHoursPerMonth
                                     if (getDoctor[k].dutyHoursAllotedPerMonth < getDoctor[k].dutyHoursPerMonth) {
                                         // check if duty hours alloted is less than dutyHoursPerday
-                                        if (getDoctor[k].dutyHoursAllotedPerDay < getDoctor[k].dutyHoursPerDay) {
+                                        if (dutyHoursAllotedPerDay < getDoctor[k].dutyHoursPerDay) {
 
-                                            const shiftStartDate = i + '/' + (currentMonth + 1) + '/' + new Date().getFullYear()
-                                            const shiftEndDate = i + '/' + (currentMonth + 1) + '/' + new Date().getFullYear()
+                                            var shiftStartDate = i + '/' + (currentMonth + 1) + '/' + new Date().getFullYear()
+                                            var shiftEndDate = i + '/' + (currentMonth + 1) + '/' + new Date().getFullYear()
 
-                                            const shiftStartTime = getSlotStartHour + ' ' + getSlotStartAmPm
+                                            var shiftStartTime = getSlotStartHour + ' ' + getSlotStartAmPm
 
-                                            const shiftEndTime = getSlotEndHour + ' ' + getSlotEndAmPm
+                                            var shiftEndTime = getSlotEndHour + ' ' + getSlotEndAmPm
 
                                             // add 1 to getDoctor[k].dutyHoursAllotedPerMonth
                                             getDoctor[k].dutyHoursAllotedPerMonth = getDoctor[k].dutyHoursAllotedPerMonth + 1
+                                            // add 1 to dutyHoursAllotedPerDay
+                                            dutyHoursAllotedPerDay = dutyHoursAllotedPerDay + 1
                                             // add 1 to getSlot[j]?.DoctorsAlloted
                                             getSlot[j].Allotment[i - 1].DoctorsAlloted = getSlot[j].Allotment[i - 1]?.DoctorsAlloted + 1
 
@@ -149,7 +151,7 @@ export const generateShift = async (req, res) => {
                                             // save slot
                                             await getSlot[j].save()
                                             // check if doctor is already in shift
-                                            const checkIfDoctorInShift = await ShiftModel.findOne({
+                                            var checkIfDoctorInShift = await ShiftModel.findOne({
                                                 doctors: getDoctorId[k],
                                                 shiftStartDate: shiftStartDate,
                                                 shiftEndDate: shiftEndDate,
@@ -158,7 +160,7 @@ export const generateShift = async (req, res) => {
                                             })
 
                                             //    check if shift is already created
-                                            const checkIfShiftCreated = await ShiftModel.findOne({
+                                            var checkIfShiftCreated = await ShiftModel.findOne({
                                                 shiftStartDate: shiftStartDate,
                                                 shiftEndDate: shiftEndDate,
                                                 shiftStartTime: shiftStartTime,
@@ -168,7 +170,7 @@ export const generateShift = async (req, res) => {
 
                                             if (checkIfShiftCreated === null && checkIfDoctorInShift === null) {
                                                 // create shift
-                                                const newShift = new ShiftModel({
+                                                var newShift = new ShiftModel({
                                                     doctors: getDoctorId[k],
                                                     shiftStartDate: shiftStartDate,
                                                     shiftEndDate: shiftEndDate,
@@ -193,19 +195,19 @@ export const generateShift = async (req, res) => {
                                 // check if slot start hour is greater than or equal to doctor start hour
                                 if (IntgetSlotStartHour >= IntgetStartHour && IntgetSlotEndHour <= IntgetEndHour) {
                                     // check if Am/Pm matches
-                                    if (getSlotStartAmPm === getStartAmPm && getSlotEndAmPm === getEndAmPm) {
+                                    // if (getSlotStartAmPm === getStartAmPm && getSlotEndAmPm === getEndAmPm) {
                                         // check if duty hours alloted is less than dutyHoursPerMonth
                                         if (getDoctor[k].dutyHoursAllotedPerMonth < getDoctor[k].dutyHoursPerMonth) {
 
                                             // check if duty hours alloted is less than dutyHoursPerday
                                             if (getDoctor[k].dutyHoursAllotedPerDay < getDoctor[k].dutyHoursPerDay) {
 
-                                                const shiftStartDate = i + '/' + (currentMonth + 1) + '/' + new Date().getFullYear()
-                                                const shiftEndDate = i + '/' + (currentMonth + 1) + '/' + new Date().getFullYear()
+                                                var shiftStartDate = i + '/' + (currentMonth + 1) + '/' + new Date().getFullYear()
+                                                var shiftEndDate = i + '/' + (currentMonth + 1) + '/' + new Date().getFullYear()
 
-                                                const shiftStartTime = getSlotStartHour + ' ' + getSlotStartAmPm
+                                                var shiftStartTime = getSlotStartHour + ' ' + getSlotStartAmPm
 
-                                                const shiftEndTime = getSlotEndHour + ' ' + getSlotEndAmPm
+                                                var shiftEndTime = getSlotEndHour + ' ' + getSlotEndAmPm
 
                                                 // add 1 to getDoctor[k].dutyHoursAllotedPerMonth
                                                 getDoctor[k].dutyHoursAllotedPerMonth = getDoctor[k].dutyHoursAllotedPerMonth + 1
@@ -221,7 +223,7 @@ export const generateShift = async (req, res) => {
                                                 // save slot
                                                 await getSlot[j].save()
 
-                                                const checkIfDoctorInShift = await ShiftModel.findOne({
+                                                var checkIfDoctorInShift = await ShiftModel.findOne({
                                                     doctors: getDoctorId[k],
                                                     shiftStartDate: shiftStartDate,
                                                     shiftEndDate: shiftEndDate,
@@ -230,7 +232,7 @@ export const generateShift = async (req, res) => {
                                                 })
 
                                                 //    check if shift is already created
-                                                const checkIfShiftCreated = await ShiftModel.findOne({
+                                                var checkIfShiftCreated = await ShiftModel.findOne({
                                                     shiftStartDate: shiftStartDate,
                                                     shiftEndDate: shiftEndDate,
                                                     shiftStartTime: shiftStartTime,
@@ -240,7 +242,7 @@ export const generateShift = async (req, res) => {
                                                 console.log('not night ', checkIfShiftCreated);
                                                 if (checkIfShiftCreated === null && checkIfDoctorInShift === null) {
                                                     // create shift
-                                                    const newShift = new ShiftModel({
+                                                    var newShift = new ShiftModel({
                                                         doctors: getDoctorId[k],
                                                         shiftStartDate: shiftStartDate,
                                                         shiftEndDate: shiftEndDate,
@@ -259,7 +261,7 @@ export const generateShift = async (req, res) => {
 
                                             }
                                         }
-                                    }
+                                    // }
                                 }
                             }
                         }
@@ -275,12 +277,164 @@ export const generateShift = async (req, res) => {
     }
 }
 
+// @route: POST /shift/create-shift
+// @purpose: : post routes to create shift
+export const createShift = async (req, res) => {
+    const { doctors, shiftStartDate, shiftEndDate, shiftStartTime, shiftEndTime, slot } = req.body
+    try {
+        var newShift = new ShiftModel({
+            doctors,
+            shiftStartDate,
+            shiftEndDate,
+            shiftStartTime,
+            shiftEndTime,
+            slot
+        })
+        await newShift.save()
+        res.status(200).json({ message: 'Shift created' })
+    }
+    catch (err) {
+        res.status(400).json({ message: err.message })
+    }
+}
+
+// @route: GET /shift/get-shifts
+// @purpose: : get routes to get all shifts
+export const getShifts = async (req, res) => {
+    try {
+        var getShifts = await ShiftModel.find({})
+        res.status(200).json({ message: 'All shifts', data: getShifts })
+    }
+    catch (err) {
+        res.status(400).json({ message: err.message })
+    }
+}
+
+// @route: GET /shift/get-shifts-by-date
+// @purpose: : get routes to get all shifts by date
+export const getShiftsByDate = async (req, res) => {
+    const { shiftStartDate, shiftEndDate } = req.body
+    try {
+        var getShifts = await ShiftModel.find({
+            shiftStartDate: shiftStartDate,
+            shiftEndDate: shiftEndDate
+        })
+        res.status(200).json({ message: 'All shifts', data: getShifts })
+    }
+    catch (err) {
+        res.status(400).json({ message: err.message })
+    }
+}
+
+// @route: GET /shift/get-shifts-by-doctor
+// @purpose: : get routes to get all shifts by doctor
+export const getShiftsByDoctor = async (req, res) => {
+    const { doctors } = req.body
+    try {
+        var getShifts = await ShiftModel.find({
+            doctors: doctors
+        })
+        res.status(200).json({ message: 'All shifts', data: getShifts })
+    }
+    catch (err) {
+        res.status(400).json({ message: err.message })
+    }
+}
+
+// @route: PUT /shift/update-shift
+// @purpose: : put routes to update shift
+export const updateShift = async (req, res) => {
+    const { doctors, shiftStartDate, shiftEndDate, shiftStartTime, shiftEndTime, slot } = req.body
+    try {
+        var getShift = await ShiftModel.findOne({
+            shiftStartDate: shiftStartDate,
+            shiftEndDate: shiftEndDate,
+            shiftStartTime: shiftStartTime,
+            shiftEndTime: shiftEndTime,
+            slot: slot
+        })
+        if (getShift === null) {
+            res.status(400).json({ message: 'Shift not found' })
+        }
+        else {
+            getShift.doctors = doctors
+            await getShift.save()
+            res.status(200).json({ message: 'Shift updated' })
+        }
+    }
+    catch (err) {
+        res.status(400).json({ message: err.message })
+    }
+}
+
+// @route: PUT /shift/approve-or-decline
+// @purpose: : put routes to approve or decline shift
+export const approveOrDecline = async (req, res) => {
+    const { shiftStartDate, shiftEndDate, shiftStartTime, shiftEndTime, slot, status } = req.body
+    try {
+        var getShift = await ShiftModel.findOne({
+            shiftStartDate: shiftStartDate,
+            shiftEndDate: shiftEndDate,
+            shiftStartTime: shiftStartTime,
+            shiftEndTime: shiftEndTime,
+            slot: slot
+        })
+        if (getShift === null) {
+            res.status(400).json({ message: 'Shift not found' })
+        }
+        else {
+            getShift.status = status
+            await getShift.save()
+            res.status(200).json({ message: 'Shift updated' })
+        }
+    }
+    catch (err) {
+        res.status(400).json({ message: err.message })
+    }
+}
+
+// @route: DELETE /shift/delete-shift-by-time
+// @purpose: : delete routes to delete shift by date
+export const deleteShiftByDate = async (req, res) => {
+    const { shiftStartDate, shiftEndDate,shiftStartTime,shiftEndTime } = req.body
+    try {
+        var getShift = await ShiftModel.findOne({
+            shiftStartDate: shiftStartDate,
+            shiftEndDate: shiftEndDate,
+            shiftStartTime: shiftStartTime,
+            shiftEndTime: shiftEndTime
+        })
+        if (getShift === null) {
+            res.status(400).json({ message: 'Shift not found' })
+        }
+        else {
+            await getShift.remove()
+            res.status(200).json({ message: 'Shift deleted' })
+        }
+    }
+    catch (err) {
+        res.status(400).json({ message: err.message })
+    }
+}
+
+// @route: DELETE /shift/delete-all
+// @purpose: : delete all shifts
+export const deleteAllShifts = async (req, res) => {
+    try {
+        await ShiftModel.deleteMany({})
+        res.status(200).json({ message: 'All shifts deleted' })
+    }
+    catch (err) {
+        res.status(400).json({ message: err.message })
+    }
+}
+
 // @route: POST /shift/generate-calendar
 // @purpose: : post routes to generate calendar of a month for current year and month
 export const generateCalendar = async (req, res) => {
     const { currentMonth } = req.body
     try {
-        const getCalendar = await CalendarModel.findOne({
+        var getCalendar = await CalendarModel.findOne({
             calendarArray: {
                 $elemMatch: {
                     dayMonth: currentMonth + 1
@@ -289,19 +443,19 @@ export const generateCalendar = async (req, res) => {
         })
         if (!getCalendar) {
             // get current year
-            const currentYear = new Date().getFullYear()
+            var currentYear = new Date().getFullYear()
             // get total number of days in a month
-            const totalDays = new Date(currentYear, currentMonth + 1, 0).getDate()
+            var totalDays = new Date(currentYear, currentMonth + 1, 0).getDate()
             // create array of days
-            const daysArray = [...Array(totalDays).keys()].map((i) => i + 1)
+            var daysArray = [...Array(totalDays).keys()].map((i) => i + 1)
             // create calendar array
-            const calendarArray = daysArray.map((day) => {
-                const date = new Date(currentYear, currentMonth, day)
-                const getDay = date.getDay()
-                const dayName = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][getDay]
-                const dayNumber = day
-                const dayMonth = currentMonth + 1
-                const dayYear = currentYear
+            var calendarArray = daysArray.map((day) => {
+                var date = new Date(currentYear, currentMonth, day)
+                var getDay = date.getDay()
+                var dayName = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][getDay]
+                var dayNumber = day
+                var dayMonth = currentMonth + 1
+                var dayYear = currentYear
                 return {
                     dayName,
                     dayNumber,
@@ -309,11 +463,11 @@ export const generateCalendar = async (req, res) => {
                     dayYear
                 }
             })
-            const newCalendar = new CalendarModel({
+            var newCalendar = new CalendarModel({
                 calendarArray: calendarArray
             })
             // save calendar array
-            const saveCalendar = await newCalendar.save()
+            var saveCalendar = await newCalendar.save()
             // console.log(saveCalendar);
             // send calendar array
             res.status(200).json({
@@ -341,12 +495,12 @@ export const generateCalendar = async (req, res) => {
 export const addSlot = async (req, res) => {
     const { slotTime, isNight } = req.body
     try {
-        const newSlot = new SlotModel({
+        var newSlot = new SlotModel({
             slotTime,
             isNight
         })
         // save slot
-        const saveSlot = await newSlot.save()
+        var saveSlot = await newSlot.save()
         // send slot
         res.status(200).json({
             success: true,
@@ -367,7 +521,7 @@ export const updateSlot = async (req, res) => {
         slotTime
     } = req.body
     try {
-        const getSlot = await SlotModel
+        var getSlot = await SlotModel
             .findOne({
                 slotTime
             })
@@ -390,7 +544,7 @@ export const updateSlot = async (req, res) => {
                 }
                 if (Present) {
                     // find by date and update doctorNeeded
-                    const getSlotUpdate = await SlotModel
+                    var getSlotUpdate = await SlotModel
                         .findOneAndUpdate({
                             slotTime,
                             Allotment: {
@@ -411,7 +565,7 @@ export const updateSlot = async (req, res) => {
                         })
 
                     // save
-                    const saveSlot = await getSlotUpdate.save()
+                    var saveSlot = await getSlotUpdate.save()
                     // send slot
                     res.status(200).json({
                         success: true,
@@ -420,7 +574,7 @@ export const updateSlot = async (req, res) => {
                     })
                 }
                 else {
-                    const getSlotUpdate = await SlotModel
+                    var getSlotUpdate = await SlotModel
                         .findOneAndUpdate({
                             slotTime
                         }, {
@@ -443,7 +597,7 @@ export const updateSlot = async (req, res) => {
             else {
                 // add data in allotment
                 getSlot.Allotment = Allotment
-                const saveSlot = await getSlot.save()
+                var saveSlot = await getSlot.save()
                 // send slot
                 res.status(200).json({
                     success: true,

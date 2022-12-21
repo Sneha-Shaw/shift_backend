@@ -52,7 +52,12 @@ Content-Type: application/json
             "date": 1
         }
     ],
-    "slotTime": "10:00 PM - 11:00 PM"
+    "slotTime": "07:00 PM - 08:00 PM"
 }
 
 ###
+
+# delete all shifts
+
+DELETE http://localhost:5000/private/shift/delete-all-shifts
+Content-Type: application/json
