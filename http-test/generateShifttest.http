@@ -57,6 +57,21 @@ Content-Type: application/json
 
 ###
 
+# update all slot
+
+PUT  http://localhost:5000/private/shift/update-all-slots
+Content-Type: application/json
+
+{
+    "Allotment":[
+        {
+            "DoctorsAlloted": 0,
+            "isFulfilled": false,
+            "date": 1
+        }
+    ]
+}
+###
 # delete all shifts
 
 DELETE http://localhost:5000/private/shift/delete-all-shifts

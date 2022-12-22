@@ -42,10 +42,18 @@ const userAcSchema = new schema({
         type: Number,
         default: 0
     },
-    dutyHoursAllotedPerDay:{
-        type: Number,
-        default: 0
-    },
+    AllotmentPerDay:[
+        {
+            dutyHoursAllotedPerDay:{
+                type: Number,
+                default: 0
+            },
+            date:{
+                type: Number,
+                default: 1
+            }
+        }
+    ],
     nightDuty:{
         type: Boolean,
         default: false

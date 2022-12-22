@@ -25,7 +25,7 @@ export const generateShift = async (req, res) => {
 
         // get doctor names
         var getDoctorName = getDoctor.map((doctor) => doctor.name)
-        // console.log(getDoctorName);
+
         // getBreaks
         var getBreaks = await breakModel.find({})
 
@@ -52,7 +52,7 @@ export const generateShift = async (req, res) => {
         var totalDays = getCalendarArray.length
 
         // Traverse through 1 to total days
-        for (let i = 1; i <= 5; i++) {
+        for (let i = 1; i <= totalDays; i++) {
             // Traverse through all slots
             var dutyHoursAllotedPerDay = 0
             for (let j = 0; j < 24; j++) {
@@ -117,7 +117,7 @@ export const generateShift = async (req, res) => {
                             var getSlotEndAmPm = slotEndTime[slotEndTime.length - 2] + slotEndTime[slotEndTime.length - 1]
 
                             if (getSlot[j].isNight === true) {
-                                console.log('night');
+                                console.log(i, 'night');
                                 // check if current doctor has opted for night duty
                                 if (getDoctor[k].nightDuty === true) {
 
@@ -133,6 +133,10 @@ export const generateShift = async (req, res) => {
 
                                             var shiftEndTime = getSlotEndHour + ' ' + getSlotEndAmPm
 
+                                            // add 1 to getDoctor[k].AllotmentPerDay[i-1].dutyHoursAllotedPerDay
+                                            // getDoctor[k].AllotmentPerDay[i - 1].dutyHoursAllotedPerDay = getDoctor[k].AllotmentPerDay[i - 1].dutyHoursAllotedPerDay + 1
+                                            // update getDoctor[k].AllotmentPerDay[i-1].date to current date when getDoctor[k].AllotmentPerDay[i-1].dutyHoursAllotedPerDay is changed
+                                            // getDoctor[k].AllotmentPerDay[i - 1].date = i + '/' + (currentMonth + 1) + '/' + new Date().getFullYear()
                                             // add 1 to getDoctor[k].dutyHoursAllotedPerMonth
                                             getDoctor[k].dutyHoursAllotedPerMonth = getDoctor[k].dutyHoursAllotedPerMonth + 1
                                             // add 1 to dutyHoursAllotedPerDay
@@ -141,8 +145,8 @@ export const generateShift = async (req, res) => {
                                             getSlot[j].Allotment[i - 1].DoctorsAlloted = getSlot[j].Allotment[i - 1]?.DoctorsAlloted + 1
 
                                             // check if doctorAlloted == doctorneeded
-                                            // console.log(getSlot[j].Allotment[i - 1]?.DoctorsAlloted);
-                                            if (getSlot[j].Allotment[i - 1]?.DoctorsAlloted === getSlot[j].Allotment[i - 1].DoctorsNeeded) {
+                                            console.log(getSlot[j]?.Allotment[i - 1]);
+                                            if (getSlot[j]?.Allotment[i - 1]?.DoctorsAlloted === getSlot[j]?.Allotment[i - 1].DoctorsNeeded) {
                                                 // set isFulfilled to true
                                                 getSlot[j].Allotment[i - 1].isFulfilled = true
                                             }
@@ -150,14 +154,6 @@ export const generateShift = async (req, res) => {
                                             await getDoctor[k].save()
                                             // save slot
                                             await getSlot[j].save()
-                                            // check if doctor is already in shift
-                                            var checkIfDoctorInShift = await ShiftModel.findOne({
-                                                doctors: getDoctorId[k],
-                                                shiftStartDate: shiftStartDate,
-                                                shiftEndDate: shiftEndDate,
-                                                shiftStartTime: shiftStartTime,
-                                                shiftEndTime: shiftEndTime
-                                            })
 
                                             //    check if shift is already created
                                             var checkIfShiftCreated = await ShiftModel.findOne({
@@ -167,8 +163,7 @@ export const generateShift = async (req, res) => {
                                                 shiftEndTime: shiftEndTime,
                                                 slot: getSlot[j]._id
                                             })
-
-                                            if (checkIfShiftCreated === null && checkIfDoctorInShift === null) {
+                                            if (checkIfShiftCreated === null) {
                                                 // create shift
                                                 var newShift = new ShiftModel({
                                                     doctors: getDoctorId[k],
@@ -176,14 +171,28 @@ export const generateShift = async (req, res) => {
                                                     shiftEndDate: shiftEndDate,
                                                     shiftStartTime: shiftStartTime,
                                                     shiftEndTime: shiftEndTime,
+                                                    shiftDay: getDayName,
                                                     slot: getSlot[j]._id
                                                 })
                                                 await newShift.save()
                                             }
                                             else {
-                                                // add doctor to shift
-                                                checkIfShiftCreated.doctors.push(getDoctorId[k])
-                                                await checkIfShiftCreated.save()
+                                                var present = false
+                                                // for loop to traverse through checkIfShiftCreated.doctors then if doctor is already present then set it to true
+                                                for (let l = 0; l < checkIfShiftCreated.doctors.length; l++) {
+                                                    // get id from new ObjhectId(checkIfShiftCreated.doctors[l])
+                                                    var checkIfShiftCreatedId = checkIfShiftCreated.doctors[l].toString()
+                                                    // get id from new ObjectId(getDoctorId[k])
+                                                    var getDoctorIdId = getDoctorId[k].toString()
+                                                    if (checkIfShiftCreatedId === getDoctorIdId) {
+                                                        present = true
+                                                    }
+                                                }
+                                                if (present === false) {
+                                                    // add doctor to shift
+                                                    checkIfShiftCreated.doctors.push(getDoctorId[k])
+                                                    await checkIfShiftCreated.save()
+                                                }
                                             }
 
                                         }
@@ -191,76 +200,84 @@ export const generateShift = async (req, res) => {
                                 }
                             }
                             else if (getSlot[j].isNight === false) {
-                                console.log('not night');
+                                console.log(i, 'not night');
                                 // check if slot start hour is greater than or equal to doctor start hour
                                 if (IntgetSlotStartHour >= IntgetStartHour && IntgetSlotEndHour <= IntgetEndHour) {
                                     // check if Am/Pm matches
                                     // if (getSlotStartAmPm === getStartAmPm && getSlotEndAmPm === getEndAmPm) {
-                                        // check if duty hours alloted is less than dutyHoursPerMonth
-                                        if (getDoctor[k].dutyHoursAllotedPerMonth < getDoctor[k].dutyHoursPerMonth) {
+                                    // check if duty hours alloted is less than dutyHoursPerMonth
+                                    if (getDoctor[k].dutyHoursAllotedPerMonth < getDoctor[k].dutyHoursPerMonth) {
 
-                                            // check if duty hours alloted is less than dutyHoursPerday
-                                            if (getDoctor[k].dutyHoursAllotedPerDay < getDoctor[k].dutyHoursPerDay) {
+                                        // check if duty hours alloted is less than dutyHoursPerday
+                                        if (getDoctor[k].dutyHoursAllotedPerDay < getDoctor[k].dutyHoursPerDay) {
 
-                                                var shiftStartDate = i + '/' + (currentMonth + 1) + '/' + new Date().getFullYear()
-                                                var shiftEndDate = i + '/' + (currentMonth + 1) + '/' + new Date().getFullYear()
+                                            var shiftStartDate = i + '/' + (currentMonth + 1) + '/' + new Date().getFullYear()
+                                            var shiftEndDate = i + '/' + (currentMonth + 1) + '/' + new Date().getFullYear()
 
-                                                var shiftStartTime = getSlotStartHour + ' ' + getSlotStartAmPm
+                                            var shiftStartTime = getSlotStartHour + ' ' + getSlotStartAmPm
 
-                                                var shiftEndTime = getSlotEndHour + ' ' + getSlotEndAmPm
+                                            var shiftEndTime = getSlotEndHour + ' ' + getSlotEndAmPm
 
-                                                // add 1 to getDoctor[k].dutyHoursAllotedPerMonth
-                                                getDoctor[k].dutyHoursAllotedPerMonth = getDoctor[k].dutyHoursAllotedPerMonth + 1
-                                                // add 1 to getSlot[j]?.DoctorsAlloted
-                                                getSlot[j].Allotment[i - 1].DoctorsAlloted = getSlot[j].Allotment[i - 1]?.DoctorsAlloted + 1
+                                            // add 1 to getDoctor[k].dutyHoursAllotedPerMonth
+                                            getDoctor[k].dutyHoursAllotedPerMonth = getDoctor[k].dutyHoursAllotedPerMonth + 1
+                                            // add 1 to getSlot[j]?.DoctorsAlloted
+                                            // getSlot[j].Allotment[i - 1].DoctorsAlloted = getSlot[j].Allotment[i - 1]?.DoctorsAlloted + 1
 
-                                                if (getSlot[j].Allotment[i - 1]?.DoctorsAlloted === getSlot[j].Allotment[i - 1].DoctorsNeeded) {
-                                                    // set isFulfilled to true
-                                                    getSlot[j].Allotment[i - 1].isFulfilled = true
-                                                }
-                                                // save doctor
-                                                await getDoctor[k].save()
-                                                // save slot
-                                                await getSlot[j].save()
+                                            if (getSlot[j]?.Allotment[i - 1]?.DoctorsAlloted === getSlot[j]?.Allotment[i - 1].DoctorsNeeded) {
+                                                // set isFulfilled to true
+                                                getSlot[j].Allotment[i - 1].isFulfilled = true
+                                            }
+                                            // save doctor
+                                            await getDoctor[k].save()
+                                            // save slot
+                                            await getSlot[j].save()
 
-                                                var checkIfDoctorInShift = await ShiftModel.findOne({
+
+                                            //    check if shift is already created
+                                            var checkIfShiftCreated = await ShiftModel.findOne({
+                                                shiftStartDate: shiftStartDate,
+                                                shiftEndDate: shiftEndDate,
+                                                shiftStartTime: shiftStartTime,
+                                                shiftEndTime: shiftEndTime,
+                                                slot: getSlot[j]._id
+                                            })
+                                            if (checkIfShiftCreated === null) {
+                                                // create shift
+                                                var newShift = new ShiftModel({
                                                     doctors: getDoctorId[k],
                                                     shiftStartDate: shiftStartDate,
                                                     shiftEndDate: shiftEndDate,
                                                     shiftStartTime: shiftStartTime,
-                                                    shiftEndTime: shiftEndTime
-                                                })
-
-                                                //    check if shift is already created
-                                                var checkIfShiftCreated = await ShiftModel.findOne({
-                                                    shiftStartDate: shiftStartDate,
-                                                    shiftEndDate: shiftEndDate,
-                                                    shiftStartTime: shiftStartTime,
                                                     shiftEndTime: shiftEndTime,
+                                                    shiftDay: getDayName,
                                                     slot: getSlot[j]._id
                                                 })
-                                                console.log('not night ', checkIfShiftCreated);
-                                                if (checkIfShiftCreated === null && checkIfDoctorInShift === null) {
-                                                    // create shift
-                                                    var newShift = new ShiftModel({
-                                                        doctors: getDoctorId[k],
-                                                        shiftStartDate: shiftStartDate,
-                                                        shiftEndDate: shiftEndDate,
-                                                        shiftStartTime: shiftStartTime,
-                                                        shiftEndTime: shiftEndTime,
-                                                        slot: getSlot[j]._id
-                                                    })
-                                                    console.log('not night ', newShift);
-                                                    await newShift.save()
+                                                console.log('not night ', newShift);
+                                                await newShift.save()
+                                            }
+                                            else {
+                                                var present = false
+                                                // for loop to traverse through checkIfShiftCreated.doctors then if doctor is already present then set it to true
+                                                for (let l = 0; l < checkIfShiftCreated.doctors.length; l++) {
+                                                    // get id from new ObjhectId(checkIfShiftCreated.doctors[l])
+                                                    var checkIfShiftCreatedId = checkIfShiftCreated.doctors[l].toString()
+                                                    // get id from new ObjectId(getDoctorId[k])
+                                                    var getDoctorIdId = getDoctorId[k].toString()
+                                                    console.log(checkIfShiftCreatedId, getDoctorIdId);
+                                                    if (checkIfShiftCreatedId === getDoctorIdId) {
+                                                        present = true
+                                                    }
                                                 }
-                                                else {
+                                                console.log(present);
+                                                if (present === false) {
                                                     // add doctor to shift
                                                     checkIfShiftCreated.doctors.push(getDoctorId[k])
                                                     await checkIfShiftCreated.save()
                                                 }
-
                                             }
+
                                         }
+                                    }
                                     // }
                                 }
                             }
@@ -396,7 +413,7 @@ export const approveOrDecline = async (req, res) => {
 // @route: DELETE /shift/delete-shift-by-time
 // @purpose: : delete routes to delete shift by date
 export const deleteShiftByDate = async (req, res) => {
-    const { shiftStartDate, shiftEndDate,shiftStartTime,shiftEndTime } = req.body
+    const { shiftStartDate, shiftEndDate, shiftStartTime, shiftEndTime } = req.body
     try {
         var getShift = await ShiftModel.findOne({
             shiftStartDate: shiftStartDate,
@@ -609,6 +626,48 @@ export const updateSlot = async (req, res) => {
 
         }
 
+    }
+    catch (err) {
+        res.status(400).json({ message: err.message })
+    }
+}
+
+// @route: PUT /shift/update-all-slots
+// @purpose: : put routes to update all slot
+export const updateAllSlot = async (req, res) => {
+    const {
+        Allotment
+    } = req.body
+    try {
+
+        // update doctoralloted and isfulfilled in all slots
+        const getSlotUpdate = await SlotModel
+            .updateMany(
+                {
+                    Allotment: {
+                        $elemMatch: {
+                            date: Allotment[0].date
+                        }
+                    }
+                },
+                {
+                    $set: {
+                        "Allotment.$.DoctorsAlloted": Allotment[0].DoctorsAlloted,
+                        "Allotment.$.isFulfilled": Allotment[0].isFulfilled,
+                    }
+                }, {
+                new: true
+            }
+            )
+
+        // save
+        // var saveSlot = await getSlotUpdate.save()
+        // send slot
+        res.status(200).json({
+            success: true,
+            message: "Slot updated successfully!",
+            // saveSlot
+        })
     }
     catch (err) {
         res.status(400).json({ message: err.message })

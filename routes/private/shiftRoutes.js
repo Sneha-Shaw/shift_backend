@@ -1,7 +1,6 @@
 import express from 'express'
 import {
     generateShift,
-    deleteAllShifts,
     createShift,
     getShifts,
     getShiftsByDate,
@@ -12,7 +11,8 @@ import {
     deleteAllShifts,
     generateCalendar,
     addSlot,
-    updateSlot
+    updateSlot,
+    updateAllSlot
 } from '../../controller/shiftController.js'
 
 
@@ -39,5 +39,6 @@ route.post('/generate-calendar', generateCalendar);
 // slots
 route.post('/add-slot', addSlot);
 route.put('/update-slot', updateSlot);
+route.put('/update-all-slots', updateAllSlot);
 
 export default route

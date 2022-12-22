@@ -16,7 +16,8 @@ const shiftSchema = new schema({
         required: true
     },
     shiftDuration: {
-        type: Number
+        type: Number,
+        default: 1
     },
     shiftStartDate:{
         type: String,
@@ -29,6 +30,10 @@ const shiftSchema = new schema({
     shiftBreaks:{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Break"
+    },
+    shiftDay:{
+        type: String,
+        required: true
     },
     doctors:[
         {
