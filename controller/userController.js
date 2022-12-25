@@ -113,21 +113,35 @@ export const resetPassword = async (req, res) => {
 //@route: POST /auth/:id/request-leave
 //@purpose: : post routes for  user to request leave
 export const requestLeave = async (req, res) => {
-    const { leaveType, startDate, endDate, reason } = req.body
-    const id = req.params.id
-    const newLeaveRequest = new leaveRequestModel({
-        leaveType,
-        leaveDuration,
-        startDate,
-        endDate,
+    const {leaveType,
         leaveReason,
-        user: id
-    })
-    const saveLeaveRequest = await newLeaveRequest.save()
-    res.json({
-        success: true,
-        message: "Leave request sent successfully!"
-    })
+        startDate,
+        endDate } = req.body
+    const id = req.params.id
+    const checkUser = await userAccount
+    .findById(id)
+    if (isEmpty(checkUser)) {
+        res.status(404).json({
+            success: false,
+            message: "User not found!"
+        })
+    }
+    else {
+        const newLeaveRequest = new leaveRequestModel({
+            leaveType,
+            leaveReason,
+            startDate,
+            endDate,
+            user: id,
+            username: checkUser.name
+        })
+        const saveLeaveRequest = await newLeaveRequest.save()
+        res.json({
+            success: true,
+            message: "Leave request sent successfully!",
+            leaveRequest: saveLeaveRequest
+        })
+    }
 }
 
 //@route: GET /auth/:id/get-leaves
@@ -161,7 +175,8 @@ export const requestSpecial = async (req, res) => {
     else {
         const newSpecialRequest = new specialRequestModel({
             request,
-            user: id
+            user: id,
+            username: checkUser.name
         })
         const saveSpecialRequest = await newSpecialRequest.save()
         res.json({

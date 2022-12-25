@@ -527,6 +527,39 @@ export const generateCalendar = async (req, res) => {
     }
 }
 
+// @route: GET /shift/get-calendar
+// @purpose: : get routes to get calendar of a month for current year and month
+export const getCalendar = async (req, res) => {
+    let { currentMonth } = req.query
+
+    try {
+        // parseint currentmonth
+        currentMonth = parseInt(currentMonth)
+        var getCalendar = await CalendarModel.findOne({
+            calendarArray: {
+                $elemMatch: {
+                    dayMonth: currentMonth + 1
+                }
+            }
+        })
+        if (!getCalendar) {
+            res.status(404).json({ 
+                success: false,
+                message: "Calendar not found!"
+            })
+        }
+        else {
+            res.status(200).json({
+                success: true,
+                message: "Calendar found!",
+                getCalendar
+            })
+        }
+    }
+    catch (err) {
+        res.status(400).json({ message: err.message })
+    }   
+}
 
 
 // @route: POST /shift/add-slot
@@ -690,6 +723,29 @@ export const updateAllSlot = async (req, res) => {
             message: "Slot updated successfully!",
             // saveSlot
         })
+    }
+    catch (err) {
+        res.status(400).json({ message: err.message })
+    }
+}
+
+// @route: /shift/get-all-slots
+// @purpose: : get routes to get all slots
+export const getAllSlots = async (req, res) => {
+    try {
+        var getAllSlots = await SlotModel.find()
+        if(getAllSlots){
+            res.status(200).json({
+                success: true,
+                message: "Slots found!",
+                getAllSlots
+            })
+        }else{
+            res.status(404).json({
+                success: false,
+                message: "Slots not found!"
+            })
+        }
     }
     catch (err) {
         res.status(400).json({ message: err.message })

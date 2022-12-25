@@ -20,6 +20,12 @@ Content-Type: application/json
     "password": "12345"
 }
 ###
+
+# GET ADMIN
+
+GET http://localhost:5000/public/admin/get-profile/6395f3e92fb301eb92489dfc
+Content-Type: application/json
+###
 # ADD DOCTOR
 POST http://localhost:5000/public/admin/add-doctor
 Content-Type: application/json
@@ -37,13 +43,11 @@ Content-Type: application/json
 
 ###
 # Update doctor
-PUT http://localhost:5000/public/admin/update-doctor
+PUT http://localhost:5000/public/admin/update-doctor/6399892fc3bc19addb15c66e
 Content-Type: application/json
 
 {
-    "email": "janedoe@gmail.com",
-    "dutyHoursPerMonth": "180",
-    "dutyHoursPerDay": "8 hrs"
+    "dutyHoursPerMonth": 185
 }
 ###
 # ADD BREAK
@@ -87,3 +91,19 @@ Content-Type: application/json
 #GET LEAVES
 GET http://localhost:5000/public/admin/get-all-leaves
 Content-Type: application/json
+
+###
+
+#GET SPECIAL REQUESTS
+GET http://localhost:5000/public/admin/get-all-special-requests
+Content-Type: application/json
+
+###
+
+# APPROVE DENY SPECIAL REQUESTS
+PUT http://localhost:5000/public/admin/approve-deny-special-request/63a849c17e3335ace9aec621
+Content-Type: application/json
+
+{
+    "requestStatus": "declined"
+}

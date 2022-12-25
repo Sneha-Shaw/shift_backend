@@ -5,13 +5,11 @@ const schema = mongoose.Schema
 const userAcSchema = new schema({
     name: {
         type: String,
-        require: true,
+        required: true,
         trim: true
     },
     email: {
-        type: String,
-        required: true,
-        unique: true
+        type: String
     },
     mobile:{
         type: Number

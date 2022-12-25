@@ -7,6 +7,11 @@ const specialRequestSchema = new schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'UserAccount'
     },
+    // user name
+    username: {
+        type: String,
+        required: true
+    },
 //   request 
     request: {
         type: String,
@@ -15,8 +20,8 @@ const specialRequestSchema = new schema({
 //   request status
     requestStatus: {
         type: String,
-        required: true,
-        enum: ["awaiting", "approved", "declined"]
+        enum: ["awaiting", "approved", "declined"],
+        default: "awaiting"
     },
 //   request date
     requestDate: {

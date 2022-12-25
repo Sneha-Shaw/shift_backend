@@ -10,9 +10,11 @@ import {
     deleteShiftByDate,
     deleteAllShifts,
     generateCalendar,
+    getCalendar,
     addSlot,
     updateSlot,
-    updateAllSlot
+    updateAllSlot,
+    getAllSlots
 } from '../../controller/shiftController.js'
 
 
@@ -35,10 +37,12 @@ route.delete('/delete-all-shifts', deleteAllShifts);
 
 // calendar
 route.post('/generate-calendar', generateCalendar);
+route.get('/get-calendar', getCalendar);
 
 // slots
 route.post('/add-slot', addSlot);
 route.put('/update-slot', updateSlot);
 route.put('/update-all-slots', updateAllSlot);
+route.get('/get-all-slots', getAllSlots);
 
 export default route

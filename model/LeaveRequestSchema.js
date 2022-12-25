@@ -12,21 +12,17 @@ const leaveRequestSchema = new schema({
         required: true
     },
     startDate:{
-        type: Date,
+        type: String,
         required: true
     },
     endDate:{
-        type: Date,
+        type: String,
         required: true
     },
     leaveStatus:{
         type: String,
-        required: true,
-        enum: ["awaiting", "approved", "declined"]
-    },
-    leaveDuration:{
-        type: String,
-        required: true
+        enum: ["awaiting", "approved", "declined"],
+        default: "awaiting"
     },
     leaveAppliedDate:{
         type: Date,
@@ -36,6 +32,10 @@ const leaveRequestSchema = new schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'UserAccount'
+    },
+    username:{
+        type: String,
+        required: true
     }
 })
 

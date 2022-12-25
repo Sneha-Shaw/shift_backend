@@ -73,6 +73,25 @@ export const loginAdmin = async (req, res) => {
     }
 }
 
+// @route: GET /admin/get-admin/:id
+// @purpose: : get routes for  admin to get their profile
+export const getAdminProfile = async (req, res) => {
+    const id= req.params.id
+    const admin = await adminAccount.findById(id)
+    console.log(admin,id);
+    if (admin) {
+        res.json({
+            success: true,
+            admin
+        })
+    } else {
+        res.status(404).json({
+            success: false,
+            message: "Admin not found!"
+        })
+    }
+}
+
 // @route: POST /admin/add-doctor
 // @purpose: : post routes for  admin to add doctor and send them email with their email and a random password
 export const addDoctor = async (req, res) => {
@@ -81,11 +100,11 @@ export const addDoctor = async (req, res) => {
         email,
         mobile,
         password,
-        department,
         designation,
         type,
         dutyHoursPerMonth,
-        dutyHoursPerDay
+        dutyHoursPerDay,
+        nightDuty
     } = req.body
     // const doctorexists
     const doctorexists = await userAccount.findOne({ email: email })
@@ -101,18 +120,17 @@ export const addDoctor = async (req, res) => {
             email,
             mobile,
             password,
-            department,
             designation,
             type,
             dutyHoursPerMonth,
-            dutyHoursPerDay
+            dutyHoursPerDay,
+            nightDuty
         })
         createDoctor.save()
         if (createDoctor) {
             res.json({
                 success: true,
-                _id: createDoctor._id,
-                email: createDoctor.email
+                createDoctor
             })
         } else {
             res.status(404).json({
@@ -153,27 +171,26 @@ export const updateDoctor = async (req, res) => {
         name,
         email,
         mobile,
-        password,
-        department,
         designation,
         type,
         dutyHoursPerMonth,
-        dutyHoursPerDay
+        dutyHoursPerDay,
+        nightDuty
     } = req.body
-    const updateDoctor = await userAccount.findOne
+    const id = req.params.id
+    const updateDoctor = await userAccount.findById
         ({
-            email: email
+            _id: id
         })
     if (updateDoctor) {
-        updateDoctor.name = name
-        updateDoctor.email = email
-        updateDoctor.mobile = mobile
-        updateDoctor.password = password
-        updateDoctor.department = department
-        updateDoctor.designation = designation
-        updateDoctor.type = type
-        updateDoctor.dutyHoursPerMonth = dutyHoursPerMonth
-        updateDoctor.dutyHoursPerDay = dutyHoursPerDay
+        updateDoctor.name = name ||  updateDoctor.name
+        updateDoctor.email = email || updateDoctor.email
+        updateDoctor.mobile = mobile || updateDoctor.mobile
+        updateDoctor.designation = designation || updateDoctor.designation
+        updateDoctor.type = type || updateDoctor.type
+        updateDoctor.dutyHoursPerMonth = dutyHoursPerMonth || updateDoctor.dutyHoursPerMonth
+        updateDoctor.dutyHoursPerDay = dutyHoursPerDay || updateDoctor.dutyHoursPerDay
+        updateDoctor.nightDuty = nightDuty || updateDoctor.nightDuty
         updateDoctor.save()
         res.json({
             success: true,
@@ -275,11 +292,8 @@ export const addBreaks = async (req, res) => {
 // @route: POST /admin/delete-break
 // @purpose: : post routes for  admin to delete breaks
 export const deleteBreaks = async (req, res) => {
-    const { breakName } = req.body
-    const deleteBreaks = await breakModel.findOne
-        ({
-            breakName: breakName
-        })
+    const id = req.params.id
+    const deleteBreaks = await breakModel.findById(id)
     if (deleteBreaks) {
         deleteBreaks.remove()
         res.json({
@@ -335,11 +349,9 @@ export const getBreaksById = async (req, res) => {
 // @route: PUT /admin/update-break-status
 // @purpose: : post routes for  admin to update break status
 export const updateBreakStatus = async (req, res) => {
-    const { breakName, breakStatus } = req.body
-    const updateBreakStatus = await breakModel.findOne
-        ({
-            breakName: breakName
-        })
+    const id = req.params.id
+    const { breakStatus } = req.body
+    const updateBreakStatus = await breakModel.findById(id)
     if (updateBreakStatus) {
         updateBreakStatus.breakStatus = breakStatus
         updateBreakStatus.save()
@@ -373,11 +385,12 @@ export const getAllLeaves = async (req, res) => {
         })
     }
 }
-// @route: PUT /admin/approve-deny-leave
+// @route: PUT /admin/approve-deny-leave/:id
 // @purpose: post routes for admin to approve or deny leave to a particular user
 export const approveDenyLeave = async (req, res) => {
-    const { leaveId, leaveStatus } = req.body
-    const approveDenyLeave = await leaveRequestModel.findById(leaveId)
+    const id = req.params.id
+    const { leaveStatus } = req.body
+    const approveDenyLeave = await leaveRequestModel.findById(id)
     if (approveDenyLeave) {
         approveDenyLeave.leaveStatus = leaveStatus
         approveDenyLeave.save()
@@ -394,7 +407,7 @@ export const approveDenyLeave = async (req, res) => {
     }
 }
 
-// @route: POST /admin/get-special-requests
+// @route: POST /admin/get-all-special-requests
 // @purpose: post routes for admin to get all special request
 export const getSpecialRequests = async (req, res) => {
     const getSpecialRequests = await specialRequestModel.find({})
@@ -408,6 +421,28 @@ export const getSpecialRequests = async (req, res) => {
         res.status(404).json({
             success: false,
             message: "No special request found!"
+        })
+    }
+}
+
+// @route: PUT /admin/approve-deny-special-request/:id
+// @purpose: post routes for admin to approve or deny special request to a particular user
+export const approveDenySpecialRequest = async (req, res) => {
+    const id = req.params.id
+    const { requestStatus } = req.body
+    const approveDenySpecialRequest = await specialRequestModel.findById(id)
+    if (approveDenySpecialRequest) {
+        approveDenySpecialRequest.requestStatus = requestStatus
+        approveDenySpecialRequest.save()
+        res.json({
+            success: true,
+            message: "Special request status updated successfully!"
+        })
+    }
+    else {
+        res.status(404).json({
+            success: false,
+            message: "Special request not found!"
         })
     }
 }

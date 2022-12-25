@@ -28,6 +28,14 @@ Content-Type: application/json
 
 ###
 
+# REQUEST SPECIAL
+POST http://localhost:5000/public/auth/6399a8b629ae28c5337d382d/special-request
+Content-Type: application/json
+
+{
+   "request": "He is given a break from 4 PM to 5 PM for Yoga during the month of November"
+}
+###
 # ADD AVAILABILITY
 POST http://localhost:5000/public/auth/6399a8b629ae28c5337d382d/add-availability
 Content-Type: application/json
@@ -54,3 +62,15 @@ GET http://localhost:5000/public/auth/6395f4b82fb301eb92489e01/get-availability
 Content-Type: application/json
 ###
 
+# REQUEST LEAVE
+POST http://localhost:5000/public/auth/6399a8b629ae28c5337d382d/request-leave
+Content-Type: application/json
+
+{
+   
+    "leaveType": "casual",
+    "leaveReason": "He is going to attend a conference",
+     "startDate": "5/12/22",
+    "endDate": "7/12/22"
+    
+}
