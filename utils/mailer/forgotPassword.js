@@ -32,7 +32,7 @@ export default async function sendmail(checkEmail) {
         const mailOptions = {
             from: 'Matricula <shubhamkumar172214@gmail.com>',
             to: checkEmail.email,
-            subject: `${checkEmail.username}, here's your PIN`,
+            subject: `${checkEmail.name}, here's your PIN`,
             html: `<div style="width:100%; height:100vh; display:flex; aligh-item:center; justify-content:center; background:#f9f9f9;">
                         <div style="width:90%; height:90%; background:#fff; text-align:left; padding-left:20px;">
                           <h1 style="color:#23AFDB"> Quordnet Academy </h1>

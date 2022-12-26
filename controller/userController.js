@@ -20,17 +20,12 @@ export const loginUser = async (req, res) => {
     if (!isEmpty(checkEmail)) {
         const checkPassword = await bcrypt.compare(password, checkEmail.password)
         if (checkPassword) {
-            res.json({
+            res.status(200).json({
                 success: true,
-                _id: checkEmail._id,
-                name: checkEmail.username,
-                email: checkEmail.email,
-                mobile: checkEmail.mobile,
-                // designatuon,department,typw
-                designation: checkEmail.designation,
-                department: checkEmail.department,
-                type: checkEmail.type,
-                token: generateToken(checkEmail._id)
+                message: "Login successfully!",
+                name: checkEmail.name,
+                _id: checkEmail._id
+
             })
         } else {
             res.status(401).json({
@@ -113,13 +108,15 @@ export const resetPassword = async (req, res) => {
 //@route: POST /auth/:id/request-leave
 //@purpose: : post routes for  user to request leave
 export const requestLeave = async (req, res) => {
-    const {leaveType,
+    const {
+        leaveType,
         leaveReason,
         startDate,
-        endDate } = req.body
+        endDate
+    } = req.body
     const id = req.params.id
     const checkUser = await userAccount
-    .findById(id)
+        .findById(id)
     if (isEmpty(checkUser)) {
         res.status(404).json({
             success: false,
@@ -249,7 +246,7 @@ export const addAvailability = async (req, res) => {
         })
     }
     else {
-// if user is already in the availability model then edit it according to the input else create a new
+        // if user is already in the availability model then edit it according to the input else create a new
         const checkAvailability = await availabilityScheduleModel
             .findOne({ user: id })
         if (isEmpty(checkAvailability)) {

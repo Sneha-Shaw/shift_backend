@@ -36,7 +36,6 @@ Content-Type: application/json
     "password": "1245",
     "mobile": "9876543210",
     "designation": "Senior",
-    "department": "Some",
     "type": "permanent",
     "dutyHoursPerDay": 7
 }

@@ -3,8 +3,8 @@ POST http://localhost:5000/public/auth/login
 Content-Type: application/json
 
 {
-    "email": "janedoe@gmail.com",
-    "password": "12345"
+    "email": "shaan@gmail.com",
+    "password": "1245"
 }
 
 ###
@@ -63,7 +63,7 @@ Content-Type: application/json
 ###
 
 # REQUEST LEAVE
-POST http://localhost:5000/public/auth/6399a8b629ae28c5337d382d/request-leave
+POST http://localhost:5000/public/auth/63a95a79827a4f6c6af5823c/request-leave
 Content-Type: application/json
 
 {
