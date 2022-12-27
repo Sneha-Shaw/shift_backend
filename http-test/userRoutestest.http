@@ -46,7 +46,7 @@ Content-Type: application/json
 }
 ###
 # ADD AVAILABILITY
-POST http://localhost:5000/public/auth/6399a8b629ae28c5337d382d/add-availability
+POST http://localhost:5000/public/auth/63a95a79827a4f6c6af5823c/add-availability
 Content-Type: application/json
 
 {
@@ -57,7 +57,7 @@ Content-Type: application/json
             "end": "10:00 PM"
         },
         {
-            "day": "Thursday",
+            "day": "Friday",
             "start": "2:00 AM",
             "end": "8:00 AM"
         }
@@ -67,10 +67,18 @@ Content-Type: application/json
 ###
 
 # GET AVAILABILITY
-GET http://localhost:5000/public/auth/6395f4b82fb301eb92489e01/get-availability
+GET http://localhost:5000/public/auth/63a95a79827a4f6c6af5823c/get-availability
 Content-Type: application/json
 ###
 
+# DELETE AVAILABILITY
+PUT http://localhost:5000/public/auth/63a95a79827a4f6c6af5823c/delete-availability-by-day
+Content-Type: application/json
+
+{
+    "day": "Monday"
+}
+###
 # REQUEST LEAVE
 POST http://localhost:5000/public/auth/63a95a79827a4f6c6af5823c/request-leave
 Content-Type: application/json

@@ -266,7 +266,12 @@ export const addAvailability = async (req, res) => {
                 .findOneAndUpdate(
                     { user: id },
                     {
-                        schedule
+                    //    get all elements from schedule then push in schedule
+                        $push: {
+                            schedule: {
+                                $each: schedule
+                            }
+                        }
                     },
                     {
                         new: true
@@ -292,5 +297,62 @@ export const getAvailability = async (req, res) => {
         res.status(200).json(getAvailability)
     } catch (error) {
         res.status(404).json({ message: error.message })
+    }
+}
+
+//@route: DELETE /auth/:id/delete-availability
+//@purpose: : post routes for  user to delete availability
+export const deleteAvailability = async (req, res) => {
+    const id = req.params.id
+    // check if user exists
+    const checkUser = await userAccount
+        .findById(id)
+    if (isEmpty(checkUser)) {
+        res.status(404).json({
+            success: false,
+            message: "User not found!"
+        })
+    }
+    else {
+        const deleteAvailability = await availabilityScheduleModel
+            .findOneAndDelete({ user: id })
+        res.json({
+            success: true,
+            message: "Availability deleted successfully!",
+            deleteAvailability
+        })
+    }
+}
+
+// @route: POST /auth/:id/delete-availability-by-day
+// @purpose: : post routes for  user to delete availability by day ex: schedule[{day:monday,start:'12:00 pm,end: ''}] so del the object that has monday in it
+export const deleteAvailabilityByDay = async (req, res) => {
+    const { day } = req.body
+    const id = req.params.id
+    // check if user exists
+    const checkUser = await userAccount
+        .findById(id)
+    if (isEmpty(checkUser)) {
+        res.status(404).json({
+            success: false,
+            message: "User not found!"
+        })
+    }
+    else {
+        const deleteAvailability = await availabilityScheduleModel
+            .findOneAndUpdate(
+                { user: id },
+                {
+                    $pull: { schedule: { day } }
+                },
+                {
+                    new: true
+                }
+            )
+        res.json({
+            success: true,
+            message: "Availability deleted successfully!",
+            deleteAvailability
+        })
     }
 }

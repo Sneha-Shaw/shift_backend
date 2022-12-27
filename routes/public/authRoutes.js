@@ -11,7 +11,9 @@ import {
     getSpecialRequests,
     ShiftReplace,
     addAvailability,
-    getAvailability
+    getAvailability,
+    deleteAvailability,
+    deleteAvailabilityByDay
 } from '../../controller/userController.js'
 const route = express.Router()
 
@@ -33,5 +35,9 @@ route.post('/:id/shift-replace', ShiftReplace)
 route.post('/:id/add-availability', addAvailability)
 // get availability
 route.get('/:id/get-availability', getAvailability)
+// delete availability
+route.delete('/:id/delete-availability', deleteAvailability)
+// delete availability by day
+route.put('/:id/delete-availability-by-day', deleteAvailabilityByDay)
 
 export default route

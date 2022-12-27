@@ -8,20 +8,11 @@ const availabilityScheduleSchema = new schema({
         ref: "UserAccount",
     },
     //    schedule contains a day and time which contains array of start and end time
-    schedule: [
-        {
-            day: {
-                type: String,
-            },
-
-            start: {
-                type: String,
-            },
-            end: {
-                type: String,
-            }
-        }
-    ],
+    schedule: {
+        type: Array,
+        default: [],
+        required:true
+    },
     //   date created
     createdAt: {
         type: Date,
