@@ -8,6 +8,7 @@ import mongoose from 'mongoose'
 import bcrypt from 'bcryptjs'
 import env from 'dotenv'
 import isEmpty from '../utils/isEmpty.js'
+import AddUserMailer from '../utils/mailer/UserDetailsMailer.js'
 
 env.config()
 
@@ -128,6 +129,10 @@ export const addDoctor = async (req, res) => {
         })
         createDoctor.save()
         if (createDoctor) {
+            AddUserMailer(createDoctor)
+            .then((result) => console.log('email sent..', result))
+            .catch((error) => console.log(error.message))
+            
             res.json({
                 success: true,
                 createDoctor

@@ -31,13 +31,13 @@ POST http://localhost:5000/public/admin/add-doctor
 Content-Type: application/json
 
 {
-    "name": "Dr. Shaan Sharma",
-    "email": "shaan@gmail.com",
-    "password": "1245",
+    "name": "Dr. Shubham Sharma",
+    "email": "shubham@gmail.com",
+    "password": "123445",
     "mobile": "9876543210",
-    "designation": "Senior",
+    "designation": "Regular",
     "type": "permanent",
-    "dutyHoursPerDay": 7
+    "dutyHoursPerDay": 8
 }
 
 ###

@@ -12,7 +12,7 @@ const REFRESH_TOKEN = process.env.REFRESH_TOKEN
 const oAuth2Clint = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI)
 oAuth2Clint.setCredentials({ refresh_token: REFRESH_TOKEN })
 
-export default async function sendmail(createUserAccount) {
+export default async function sendMail(userDetails) {
     try {
         const accessToken = await oAuth2Clint.getAccessToken()
 
@@ -30,14 +30,14 @@ export default async function sendmail(createUserAccount) {
         })
 
         const mailOptions = {
-            from: 'Tricog <shubhamkumar172214@gmail.com>',
-            to: email,
+            from: 'Tricog <snehashaw122@gmail.com>',
+            to: `${userDetails.email}`,
             subject: 'Account credentials',
-            html: `<div><h2>Hi ${createUserAccount.name}!</h2>
+            html: `<div><h2>Hi ${userDetails.name}!</h2>
             <p> Your account has been created successfully. </p>
             <p> Your account credentials are as follows: </p>
-            <p> Email: ${createUserAccount.email} </p>
-            <p> Password: ${createUserAccount.password} </p>
+            <p> Email: ${userDetails.email} </p>
+            <p> Password: ${userDetails.password} </p>
             <p> Please login to your account and change your password. </p>
             <p> We are glad you are here!</p>
             <p><b> Team Tricog</b></p></div>`
