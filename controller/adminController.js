@@ -319,7 +319,7 @@ export const deleteBreaks = async (req, res) => {
 // @route: GET /admin/get-all-breaks
 // @purpose: : get routes for  admin to get all breaks
 export const getAllBreaks = async (req, res) => {
-    const getAllBreaks = await breakModel.find({})
+    const getAllBreaks = await breakModel.find({}).sort({$natural:-1})
     if (getAllBreaks) {
         res.json({
             success: true,
@@ -378,7 +378,7 @@ export const updateBreakStatus = async (req, res) => {
 // @route: GET /admin/get-all-leaves
 // @purpose: : get routes for  admin to get all leaves
 export const getAllLeaves = async (req, res) => {
-    const getAllLeaves = await leaveRequestModel.find({})
+    const getAllLeaves = await leaveRequestModel.find({}).sort({$natural:-1})
     if (getAllLeaves) {
         res.json({
             success: true,
@@ -417,7 +417,7 @@ export const approveDenyLeave = async (req, res) => {
 // @route: POST /admin/get-all-special-requests
 // @purpose: post routes for admin to get all special request
 export const getSpecialRequests = async (req, res) => {
-    const getSpecialRequests = await specialRequestModel.find({})
+    const getSpecialRequests = await specialRequestModel.find({}).sort({$natural:-1})
     if (getSpecialRequests) {
         res.json({
             success: true,

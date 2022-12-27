@@ -147,7 +147,10 @@ export const getLeaves = async (req, res) => {
     try {
         const id = req.params.id
         const getLeaves = await leaveRequestModel
-            .find({ user: id })
+            .find({ 
+                user: id
+             })
+            .sort({$natural:-1})
             .populate('user', 'name email mobile')
         res.status(200).json(getLeaves)
     } catch (error) {
@@ -191,6 +194,7 @@ export const getSpecialRequests = async (req, res) => {
         const id = req.params.id
         const getSpecialRequests = await specialRequestModel
             .find({ user: id })
+            .sort({$natural:-1})
             .populate('user', 'name email mobile')
         res.status(200).json(getSpecialRequests)
     } catch (error) {
