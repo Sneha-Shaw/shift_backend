@@ -30,16 +30,16 @@ export default async function sendmail(checkEmail) {
         })
 
         const mailOptions = {
-            from: 'Matricula <shubhamkumar172214@gmail.com>',
+            from: 'Tricog <shubhamkumar172214@gmail.com>',
             to: checkEmail.email,
             subject: `${checkEmail.name}, here's your PIN`,
             html: `<div style="width:100%; height:100vh; display:flex; aligh-item:center; justify-content:center; background:#f9f9f9;">
                         <div style="width:90%; height:90%; background:#fff; text-align:left; padding-left:20px;">
-                          <h1 style="color:#23AFDB"> Quordnet Academy </h1>
+                          <h1 style="color:#23AFDB"> Tricog </h1>
                           <h2>Hi ${checkEmail.name}, </h2>
                           <p>We received a request to reset the password on your <span style="color:#7D7D7D;">Tricog</span> <span style="color:#23AFDB;">user</span> Account.</p>
                           <p> Click on the link to complete the reset.</p>
-                          <p><a href="http://localhost:3000/useAccount/resetPassword/${checkEmail._id}"> http://localhost:3000/useAccount/resetPassword/${checkEmail._id} </a></p>
+                          <p><a href="http://localhost:3000/userAccount/resetPassword/${checkEmail._id}"> http://localhost:3000/useAccount/resetPassword/${checkEmail._id} </a></p>
                           <p> If you did not request a password reset, please ignore this email.</p>
                         </div>
                     </div>`

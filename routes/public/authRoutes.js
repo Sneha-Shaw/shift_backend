@@ -19,7 +19,7 @@ route.post('/login', loginUser)
 route.get('/', getUser)
 route.get('/get-single-user/:id', getSingleUser)
 route.post('/forgot-password', forgotPassword)
-route.post('/reset-password/:id', resetPassword)
+route.post('/:id/reset-password', resetPassword)
 
 // leaves
 route.post('/:id/request-leave', requestLeave)

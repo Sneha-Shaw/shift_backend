@@ -33,13 +33,22 @@ Content-Type: application/json
 {
     "name": "Dr. Shubham Sharma",
     "email": "shubham@gmail.com",
-    "password": "123445",
+    "password": "12445",
     "mobile": "9876543210",
     "designation": "Regular",
     "type": "permanent",
     "dutyHoursPerDay": 8
 }
+###
 
+# DELETE DOCTOR
+POST http://localhost:5000/public/admin/delete-doctor
+Content-Type: application/json
+
+{
+    "email": "shubham@gmail.com"
+
+}
 ###
 # Update doctor
 PUT http://localhost:5000/public/admin/update-doctor/6399892fc3bc19addb15c66e

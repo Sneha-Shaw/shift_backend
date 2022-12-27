@@ -77,9 +77,9 @@ export const loginAdmin = async (req, res) => {
 // @route: GET /admin/get-admin/:id
 // @purpose: : get routes for  admin to get their profile
 export const getAdminProfile = async (req, res) => {
-    const id= req.params.id
+    const id = req.params.id
     const admin = await adminAccount.findById(id)
-    console.log(admin,id);
+    console.log(admin, id);
     if (admin) {
         res.json({
             success: true,
@@ -129,10 +129,12 @@ export const addDoctor = async (req, res) => {
         })
         createDoctor.save()
         if (createDoctor) {
-            AddUserMailer(createDoctor)
-            .then((result) => console.log('email sent..', result))
-            .catch((error) => console.log(error.message))
-            
+            AddUserMailer(name,
+                email,
+                password)
+                .then((result) => console.log('email sent..', result))
+                .catch((error) => console.log(error.message))
+
             res.json({
                 success: true,
                 createDoctor
@@ -188,7 +190,7 @@ export const updateDoctor = async (req, res) => {
             _id: id
         })
     if (updateDoctor) {
-        updateDoctor.name = name ||  updateDoctor.name
+        updateDoctor.name = name || updateDoctor.name
         updateDoctor.email = email || updateDoctor.email
         updateDoctor.mobile = mobile || updateDoctor.mobile
         updateDoctor.designation = designation || updateDoctor.designation
