@@ -297,6 +297,7 @@ export const getAvailability = async (req, res) => {
         const id = req.params.id
         const getAvailability = await availabilityScheduleModel
             .find({ user: id })
+            .sort({$natural:-1})
             .populate('user', 'name email mobile')
         res.status(200).json(getAvailability)
     } catch (error) {
@@ -355,8 +356,7 @@ export const deleteAvailabilityByDay = async (req, res) => {
             )
         res.json({
             success: true,
-            message: "Availability deleted successfully!",
-            deleteAvailability
+            message: "Availability deleted successfully!"
         })
     }
 }
