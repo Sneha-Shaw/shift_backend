@@ -9,7 +9,6 @@ import {
     getLeaves,
     requestSpecial,
     getSpecialRequests,
-    ShiftReplace,
     addAvailability,
     getAvailability,
     deleteAvailability,
@@ -18,7 +17,7 @@ import {
 const route = express.Router()
 
 route.post('/login', loginUser)
-route.get('/', getUser)
+route.get('/get-all-users', getUser)
 route.get('/get-single-user/:id', getSingleUser)
 route.post('/forgot-password', forgotPassword)
 route.post('/:id/reset-password', resetPassword)
@@ -29,8 +28,6 @@ route.get('/:id/get-leaves', getLeaves)
 // special reuest
 route.post('/:id/special-request', requestSpecial)
 route.get('/:id/get-special-requests', getSpecialRequests)
-// shift replace
-route.post('/:id/shift-replace', ShiftReplace)
 // add availability
 route.post('/:id/add-availability', addAvailability)
 // get availability

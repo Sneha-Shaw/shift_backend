@@ -22,18 +22,6 @@ Content-Type: application/json
 {
     "password": "1234"
 }
-###
-# SHIFT REPLACMENT
-POST http://localhost:5000/public/auth/6395f4b82fb301eb92489e01/shift-replace
-Content-Type: application/json
-
-{
-    "name": "Dr. Jane Doe",
-    "replacement": "Dr. John Doe",
-    "date": "22nd December 2022",
-    "start": "10:00 AM",
-    "end": "1:00 PM"
-}
 
 ###
 

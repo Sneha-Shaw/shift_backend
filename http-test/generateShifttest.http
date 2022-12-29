@@ -22,7 +22,7 @@ POST http://localhost:5000/private/shift/add-slot
 Content-Type: application/json
 
 {
-    "slotTime": "11:00 PM - 12:00 AM",
+    "slotTime": "07:00 PM - 08:00 PM",
     "isNight": false
 }
 
@@ -36,12 +36,12 @@ Content-Type: application/json
 {
     "Allotment":[
         {
-            "DoctorsNeeded": 3,
+            "DoctorsNeeded": 2,
             "SeniorNeeded": 0,
-            "date": 1
+            "day": "Sunday"
         }
     ],
-    "slotTime": "11:00 PM - 12:00 AM"
+    "slotTime": "08:00 PM - 09:00 PM"
 }
 
 ###
@@ -55,7 +55,7 @@ Content-Type: application/json
         {
             "DoctorsAlloted": 0,
             "isFulfilled": false,
-            "date": 1
+            "day": "Wednesday"
         }
     ],
     "slotTime": "07:00 PM - 08:00 PM"
@@ -73,7 +73,7 @@ Content-Type: application/json
         {
             "DoctorsAlloted": 0,
             "isFulfilled": false,
-            "date": 1
+            "day": "Wednesday"
         }
     ]
 }
@@ -88,3 +88,16 @@ Content-Type: application/json
 
 GET http://localhost:5000/private/shift/get-all-slots
 Content-Type: application/json
+
+###
+# SHIFT REPLACMENT
+POST http://localhost:5000/private/shift/shift-replace
+Content-Type: application/json
+
+{
+    "name": "Dr. Shaan Sharma",
+    "replacement": "Vineesh",
+    "date": "2/1/2023",
+    "start": "10:00 AM",
+    "end": "1:00 PM"
+}

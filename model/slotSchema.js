@@ -27,9 +27,18 @@ const slotSchema = new schema({
                 type: Boolean,
                 default: false
             },
-           date:{
-                type: Number,
-                default: 1
+           day:{
+                type: String,
+                required: true,
+                enum:[
+                    "Monday",
+                    "Tuesday",
+                    "Wednesday",
+                    "Thursday",
+                    "Friday",
+                    "Saturday",
+                    "Sunday"
+                ]
            }
         }
     ],

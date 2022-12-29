@@ -4,6 +4,7 @@ import CalendarModel from "../model/calendarSchema.js";
 import userAccount from '../model/userAccountSchema.js'
 import breakModel from '../model/breakSchema.js'
 import availabilityScheduleModel from '../model/AvailabilityScheduleSchema.js'
+import shiftReplaceModel from '../model/ShiftReplaceSchema.js'
 import isEmpty from '../utils/isEmpty.js'
 
 import env from 'dotenv'
@@ -609,7 +610,7 @@ export const updateSlot = async (req, res) => {
                 // check if current date is already in allotment
                 var Present = false
                 for (let i = 0; i < getSlot.Allotment.length; i++) {
-                    if (getSlot.Allotment[i].date === Allotment[0].date) {
+                    if (getSlot.Allotment[i].day === Allotment[0].day) {
                         Present = true
                         break
                     }
@@ -621,7 +622,7 @@ export const updateSlot = async (req, res) => {
                             slotTime,
                             Allotment: {
                                 $elemMatch: {
-                                    date: Allotment[0].date
+                                    day: Allotment[0].day
                                 }
                             },
                         }, {
@@ -701,7 +702,7 @@ export const updateAllSlot = async (req, res) => {
                 {
                     Allotment: {
                         $elemMatch: {
-                            date: Allotment[0].date
+                            day: Allotment[0].day
                         }
                     }
                 },
@@ -749,5 +750,31 @@ export const getAllSlots = async (req, res) => {
     }
     catch (err) {
         res.status(400).json({ message: err.message })
+    }
+}
+
+//@route: POST /shift/shift-replace
+//@purpose: : post routes for  user to request shift replace
+export const ShiftReplace = async (req, res) => {
+    try{
+    const { name, replacement, date, start, end } = req.body
+        
+        const newShiftReplaceRequest = new shiftReplaceModel({
+            name,
+            replacement,
+            date,
+            start,
+            end
+        })
+        const saveShiftReplaceRequest = await newShiftReplaceRequest.save()
+        res.json({
+            success: true,
+            message: "Shift replace request sent successfully!",
+            saveShiftReplaceRequest
+        })
+    
+    }
+    catch(error){
+        res.status(404).json({ message: error.message })
     }
 }

@@ -2,11 +2,7 @@ import mongoose from "mongoose";
 const schema = mongoose.Schema;
 
 const shiftReplaceSchema = new schema({
-    //   user account
-    user: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "UserAccount",
-    },
+   
     //name of person who cant work
     name: {
         type: String,

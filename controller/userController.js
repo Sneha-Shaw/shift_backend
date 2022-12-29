@@ -2,7 +2,6 @@ import userAccount from '../model/userAccountSchema.js'
 import leaveRequestModel from '../model/LeaveRequestSchema.js'
 import specialRequestModel from '../model/specialRequestSchema.js'
 import availabilityScheduleModel from '../model/AvailabilityScheduleSchema.js'
-import shiftReplaceModel from '../model/ShiftReplaceSchema.js'
 import { generateToken } from '../utils/generateToken.js'
 import bcrypt from 'bcryptjs'
 import env from 'dotenv'
@@ -203,37 +202,7 @@ export const getSpecialRequests = async (req, res) => {
 }
 
 
-//@route: POST /auth/:id/shift-replace
-//@purpose: : post routes for  user to request shift replace
-export const ShiftReplace = async (req, res) => {
-    const { name, replacement, date, start, end } = req.body
-    const id = req.params.id
-    // check if user exists
-    const checkUser = await userAccount
-        .findById(id)
-    if (isEmpty(checkUser)) {
-        res.status(404).json({
-            success: false,
-            message: "User not found!"
-        })
-    }
-    else {
-        const newShiftReplaceRequest = new shiftReplaceModel({
-            name,
-            replacement,
-            date,
-            start,
-            end,
-            user: id
-        })
-        const saveShiftReplaceRequest = await newShiftReplaceRequest.save()
-        res.json({
-            success: true,
-            message: "Shift replace request sent successfully!",
-            saveShiftReplaceRequest
-        })
-    }
-}
+
 
 //@route: POST /auth/:id/add-availability
 //@purpose: : post routes for  user to add availability
