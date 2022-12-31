@@ -362,7 +362,7 @@ export const deleteAvailability = async (req, res) => {
 // @route: POST /auth/:id/delete-availability-by-day
 // @purpose: : post routes for  user to delete availability by day ex: schedule[{day:monday,start:'12:00 pm,end: ''}] so del the object that has monday in it
 export const deleteAvailabilityByDay = async (req, res) => {
-    const { day } = req.body
+    const { date } = req.body
     const id = req.params.id
     // check if user exists
     const checkUser = await userAccount
@@ -378,7 +378,7 @@ export const deleteAvailabilityByDay = async (req, res) => {
             .findOneAndUpdate(
                 { user: id },
                 {
-                    $pull: { schedule: { day } }
+                    $pull: { schedule: { date } }
                 },
                 {
                     new: true
