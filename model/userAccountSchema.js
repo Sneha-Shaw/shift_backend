@@ -11,48 +11,60 @@ const userAcSchema = new schema({
     email: {
         type: String
     },
-    mobile:{
+    mobile: {
         type: Number
     },
     password: {
         type: String,
     },
-    department:{
+    address: {
         type: String
     },
-    designation:{
+    city: {
         type: String
     },
-    type:{
+    state: {
+        type: String
+    },
+    pincode: {
+        type: Number
+    },
+    about: {
+        type: String
+    },
+    designation: {
+        type: String
+    },
+    type: {
         type: String,
         default: 'permanent',
         enum: ['permanent', 'contractual']
     },
-    dutyHoursPerMonth:{
+    dutyHoursPerMonth: {
         type: Number,
         default: 192
     },
-    dutyHoursPerDay:{
+    dutyHoursPerDay: {
         type: Number,
         default: 8
     },
-    dutyHoursAllotedPerMonth:{
+    dutyHoursAllotedPerMonth: {
         type: Number,
         default: 0
     },
-    AllotmentPerDay:[
+    AllotmentPerDay: [
         {
-            dutyHoursAllotedPerDay:{
+            dutyHoursAllotedPerDay: {
                 type: Number,
                 default: 0
             },
-            date:{
+            date: {
                 type: Number,
                 default: 1
             }
         }
     ],
-    nightDuty:{
+    nightDuty: {
         type: Boolean,
         default: false
     },

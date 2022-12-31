@@ -3,6 +3,7 @@ import {
     getSingleUser,
     loginUser,
     getUser,
+    updateProfile,
     forgotPassword,
     resetPassword,
     requestLeave,
@@ -21,6 +22,7 @@ route.get('/get-all-users', getUser)
 route.get('/get-single-user/:id', getSingleUser)
 route.post('/forgot-password', forgotPassword)
 route.post('/:id/reset-password', resetPassword)
+route.put('/:id/update-profile', updateProfile)
 
 // leaves
 route.post('/:id/request-leave', requestLeave)

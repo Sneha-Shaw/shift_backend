@@ -57,6 +57,7 @@ export const loginAdmin = async (req, res) => {
             res.json({
                 _id: checkEmail._id,
                 email: checkEmail.email,
+                name: checkEmail.name,
                 token: generateToken(checkEmail._id)
             })
         } else {
@@ -89,6 +90,51 @@ export const getAdminProfile = async (req, res) => {
         res.status(404).json({
             success: false,
             message: "Admin not found!"
+        })
+    }
+}
+
+// @route: PUT /admin/update-admin/:id
+// @purpose: : put routes for  admin to update their profile
+export const updateAdminProfile = async (req, res) => {
+
+    try {
+        const id = req.params.id
+        const {
+            name,
+            email,
+            mobile,
+            address,
+            city,
+            state,
+            pincode,
+            about
+        } = req.body
+        const admin = await adminAccount.findById(id)
+        if (admin) {
+            admin.name = admin.name || name
+            admin.email = admin.email || email
+            admin.mobile = admin.mobile || mobile
+            admin.address = admin.address || address
+            admin.city = admin.city || city
+            admin.state = admin.state || state
+            admin.pincode = admin.pincode || pincode
+            admin.about = admin.about || about
+            const updatedAdmin = await admin.save()
+            res.status(200).json({
+                success: true,
+                updatedAdmin
+            })
+        } else {
+            res.status(404).json({
+                success: false,
+                message: "Admin not found!"
+            })
+        }
+    }
+    catch (err) {
+        res.status(400).json({
+            message: error.message
         })
     }
 }
@@ -319,7 +365,7 @@ export const deleteBreaks = async (req, res) => {
 // @route: GET /admin/get-all-breaks
 // @purpose: : get routes for  admin to get all breaks
 export const getAllBreaks = async (req, res) => {
-    const getAllBreaks = await breakModel.find({}).sort({$natural:-1})
+    const getAllBreaks = await breakModel.find({}).sort({ $natural: -1 })
     if (getAllBreaks) {
         res.json({
             success: true,
@@ -378,7 +424,7 @@ export const updateBreakStatus = async (req, res) => {
 // @route: GET /admin/get-all-leaves
 // @purpose: : get routes for  admin to get all leaves
 export const getAllLeaves = async (req, res) => {
-    const getAllLeaves = await leaveRequestModel.find({}).sort({$natural:-1})
+    const getAllLeaves = await leaveRequestModel.find({}).sort({ $natural: -1 })
     if (getAllLeaves) {
         res.json({
             success: true,
@@ -417,7 +463,7 @@ export const approveDenyLeave = async (req, res) => {
 // @route: POST /admin/get-all-special-requests
 // @purpose: post routes for admin to get all special request
 export const getSpecialRequests = async (req, res) => {
-    const getSpecialRequests = await specialRequestModel.find({}).sort({$natural:-1})
+    const getSpecialRequests = await specialRequestModel.find({}).sort({ $natural: -1 })
     if (getSpecialRequests) {
         res.json({
             success: true,

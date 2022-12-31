@@ -3,6 +3,7 @@ import {
     registerAdmin,
     loginAdmin,
     getAdminProfile,
+    updateAdminProfile,
     addDoctor,
     deleteDoctor,
     updateDoctor,
@@ -24,6 +25,7 @@ const route = express.Router()
 route.post('/register', registerAdmin)
 route.post('/login', loginAdmin)
 route.get('/get-profile/:id', getAdminProfile)
+route.put('/update-profile/:id', updateAdminProfile)
 // doctor
 route.post('/add-doctor', addDoctor)
 route.post('/delete-doctor', deleteDoctor)

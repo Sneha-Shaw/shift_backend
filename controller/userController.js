@@ -57,11 +57,72 @@ export const getSingleUser = async (req, res) => {
     try {
         const id = req.params.id
         const getSingleUser = await userAccount.findById(id)
-        res.status(200).json(getSingleUser)
+        if (getSingleUser) {
+            res.status(200).json(
+                getSingleUser
+            )
+        }
+        else {
+            res.status(404).json({
+                success: false,
+                message: "User not found!"
+            })
+        }
     } catch (error) {
-        res.status(404).json({ message: error.message })
+        res.status(400).json({ message: error.message })
     }
 }
+
+// @route: PUT /auth/:id/update-profile
+// @purpose: update user profile
+export const updateProfile = async (req, res) => {
+    try {
+        const id = req.params.id
+        const {
+            name,
+            email,
+            mobile,
+            address,
+            city,
+            state,
+            pincode,
+            about,
+            designation,
+            nightDuty
+        } = req.body
+        // check user
+        const checkUser = await userAccount.findById(id)
+        if (checkUser) {
+            checkUser.name = name || checkUser.name
+            checkUser.email = email || checkUser.email
+            checkUser.mobile = mobile || checkUser.mobile
+            checkUser.address = address || checkUser.address
+            checkUser.city = city || checkUser.city
+            checkUser.state = state || checkUser.state
+            checkUser.pincode = pincode || checkUser.pincode
+            checkUser.about = about || checkUser.about
+            checkUser.designation = designation || checkUser.designation
+            checkUser.nightDuty = nightDuty || checkUser.nightDuty
+            const updatedUser = await checkUser.save()
+            res.status(200).json({
+                success: true,
+                message: "Profile updated successfully!",
+                updatedUser
+            })
+        } else {
+            res.status(404).json({
+                success: false,
+                message: "User not found!"
+            })
+        }
+    }
+    catch (error) {
+        res.status(400).json({
+            message: error.message
+        })
+    }
+}
+
 
 //@route: POST /auth/forgot-password
 //@purpose: : post routes for  user to forgot password
@@ -146,10 +207,10 @@ export const getLeaves = async (req, res) => {
     try {
         const id = req.params.id
         const getLeaves = await leaveRequestModel
-            .find({ 
+            .find({
                 user: id
-             })
-            .sort({$natural:-1})
+            })
+            .sort({ $natural: -1 })
             .populate('user', 'name email mobile')
         res.status(200).json(getLeaves)
     } catch (error) {
@@ -193,7 +254,7 @@ export const getSpecialRequests = async (req, res) => {
         const id = req.params.id
         const getSpecialRequests = await specialRequestModel
             .find({ user: id })
-            .sort({$natural:-1})
+            .sort({ $natural: -1 })
             .populate('user', 'name email mobile')
         res.status(200).json(getSpecialRequests)
     } catch (error) {
@@ -239,7 +300,7 @@ export const addAvailability = async (req, res) => {
                 .findOneAndUpdate(
                     { user: id },
                     {
-                    //    get all elements from schedule then push in schedule
+                        //    get all elements from schedule then push in schedule
                         $push: {
                             schedule: {
                                 $each: schedule
@@ -266,7 +327,7 @@ export const getAvailability = async (req, res) => {
         const id = req.params.id
         const getAvailability = await availabilityScheduleModel
             .find({ user: id })
-            .sort({$natural:-1})
+            .sort({ $natural: -1 })
             .populate('user', 'name email mobile')
         res.status(200).json(getAvailability)
     } catch (error) {
