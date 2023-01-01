@@ -4,8 +4,6 @@ import {
     loginUser,
     getUser,
     updateProfile,
-    forgotPassword,
-    resetPassword,
     requestLeave,
     getLeaves,
     requestSpecial,
@@ -20,8 +18,6 @@ const route = express.Router()
 route.post('/login', loginUser)
 route.get('/get-all-users', getUser)
 route.get('/get-single-user/:id', getSingleUser)
-route.post('/forgot-password', forgotPassword)
-route.post('/:id/reset-password', resetPassword)
 route.put('/:id/update-profile', updateProfile)
 
 // leaves

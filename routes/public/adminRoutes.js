@@ -5,6 +5,7 @@ import {
     getAdminProfile,
     updateAdminProfile,
     addDoctor,
+    searchDoctor,
     deleteDoctor,
     updateDoctor,
     getAllDoctors,
@@ -28,6 +29,7 @@ route.get('/get-profile/:id', getAdminProfile)
 route.put('/update-profile/:id', updateAdminProfile)
 // doctor
 route.post('/add-doctor', addDoctor)
+route.get('/search-doctor', searchDoctor)
 route.post('/delete-doctor', deleteDoctor)
 route.put('/update-doctor/:id', updateDoctor)
 route.get('/get-all-doctors', getAllDoctors)

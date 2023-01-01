@@ -4,7 +4,6 @@ import breakModel from '../model/breakSchema.js'
 import leaveRequestModel from '../model/LeaveRequestSchema.js'
 import specialRequestModel from '../model/specialRequestSchema.js'
 import { generateToken } from '../utils/generateToken.js'
-import mongoose from 'mongoose'
 import bcrypt from 'bcryptjs'
 import env from 'dotenv'
 import isEmpty from '../utils/isEmpty.js'
@@ -61,16 +60,16 @@ export const loginAdmin = async (req, res) => {
                 token: generateToken(checkEmail._id)
             })
         } else {
-            res.status(400).json({
+            res.status(401).json({
                 success: false,
-                message: "Invalid password!"
+                message: "Wrong password!"
             })
         }
     }
     else {
-        res.status(400).json({
+        res.status(404).json({
             success: false,
-            message: "Invalid email!"
+            message: "Admin not found!"
         })
     }
 }
@@ -178,8 +177,6 @@ export const addDoctor = async (req, res) => {
             AddUserMailer(name,
                 email,
                 password)
-                .then((result) => console.log('email sent..', result))
-                .catch((error) => console.log(error.message))
 
             res.json({
                 success: true,
@@ -191,6 +188,27 @@ export const addDoctor = async (req, res) => {
                 message: "Invalid data!"
             })
         }
+    }
+}
+
+// @route: GET /admin/search-doctor
+// @purpose: : get routes for  admin to search doctor
+export const searchDoctor = async (req, res) => {
+    const { name } = req.query
+    const searchDoctor = await userAccount.find({
+        name: name
+    })
+    if (searchDoctor) {
+        res.json({
+            success: true,
+            searchDoctor
+        })
+    }
+    else {
+        res.status(404).json({
+            success: false,
+            message: "Doctor not found!"
+        })
     }
 }
 

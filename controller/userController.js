@@ -23,13 +23,14 @@ export const loginUser = async (req, res) => {
                 success: true,
                 message: "Login successfully!",
                 name: checkEmail.name,
-                _id: checkEmail._id
+                _id: checkEmail._id,
+                email: checkEmail.email
 
             })
         } else {
             res.status(401).json({
                 success: false,
-                message: "Invalid password!"
+                message: "Wrong password!"
             })
         }
     } else {
@@ -102,7 +103,7 @@ export const updateProfile = async (req, res) => {
             checkUser.pincode = pincode || checkUser.pincode
             checkUser.about = about || checkUser.about
             checkUser.designation = designation || checkUser.designation
-            checkUser.nightDuty = nightDuty || checkUser.nightDuty
+            checkUser.nightDuty = nightDuty
             const updatedUser = await checkUser.save()
             res.status(200).json({
                 success: true,
@@ -121,48 +122,6 @@ export const updateProfile = async (req, res) => {
             message: error.message
         })
     }
-}
-
-
-//@route: POST /auth/forgot-password
-//@purpose: : post routes for  user to forgot password
-export const forgotPassword = async (req, res) => {
-    const { email } = req.body
-    const checkEmail = await userAccount.findOne({ email: email })
-    if (!isEmpty(checkEmail)) {
-        const token = generateToken(checkEmail._id)
-        const resetLink = `http://localhost:3000/reset-password/${token}`
-        res.json({
-            resetLink
-        })
-    } else {
-        res.status(404).json({
-            success: false,
-            message: "User not found!"
-        })
-    }
-}
-
-//@route: POST /auth/:id/reset-password
-//@purpose: : post routes for  user to reset password
-export const resetPassword = async (req, res) => {
-    const { password } = req.body
-    const hashedPassword = await bcrypt.hash(password, 10)
-    const id = req.params.id
-    const updateUser = await userAccount.findByIdAndUpdate
-        (
-            id,
-            {
-                password: hashedPassword
-            },
-            {
-                new: true
-            }
-        )
-    res.json({
-        success: true,
-        message: "Password updated successfully!"
-    })
 }
 
 //@route: POST /auth/:id/request-leave

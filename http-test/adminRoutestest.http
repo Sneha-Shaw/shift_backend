@@ -31,8 +31,8 @@ POST http://localhost:5000/public/admin/add-doctor
 Content-Type: application/json
 
 {
-    "name": "Dr. Shubham Sharma",
-    "email": "shubham@gmail.com",
+    "name": "Dr. J Doe",
+    "email": "doe71001@gmail.com",
     "password": "12445",
     "mobile": "9876543210",
     "designation": "Regular",
@@ -115,3 +115,9 @@ Content-Type: application/json
 {
     "requestStatus": "declined"
 }
+
+###
+
+#  SEARCH DOCTOR
+GET http://localhost:5000/public/admin/search-doctor?name=shubham	
+Content-Type: application/json

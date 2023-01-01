@@ -1,0 +1,15 @@
+# Forgot password
+POST http://localhost:5000/public/password/send-email
+Content-Type: application/json
+    
+    {
+        "email": "doe71001@gmail.com"
+    }
+###
+# Reset password
+POST http://localhost:5000/public/password/reset-password/63b05d87afc00d82ddec2833
+Content-Type: application/json
+
+{
+    "password": "1234"
+}
