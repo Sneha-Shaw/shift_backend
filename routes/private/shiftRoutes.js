@@ -15,7 +15,8 @@ import {
     updateSlot,
     updateAllSlot,
     getAllSlots,
-    ShiftReplace
+    ShiftReplace,
+    getShiftReplaceRequests
 } from '../../controller/shiftController.js'
 
 
@@ -48,5 +49,6 @@ route.get('/get-all-slots', getAllSlots);
 
 // shift replace
 route.post('/shift-replace', ShiftReplace);
+route.get('/get-shift-replace-requests', getShiftReplaceRequests);
 
 export default route

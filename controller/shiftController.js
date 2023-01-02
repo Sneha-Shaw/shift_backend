@@ -778,3 +778,19 @@ export const ShiftReplace = async (req, res) => {
         res.status(404).json({ message: error.message })
     }
 }
+
+//@route: GET /shift/get-shift-replace-requests
+//@purpose: : get routes for  user to get shift replace requests
+export const getShiftReplaceRequests = async (req, res) => {
+    try{
+        const getShiftReplaceRequests = await shiftReplaceModel.find().sort({$natural:-1})
+        res.json({
+            success: true,
+            message: "Shift replace requests found!",
+            getShiftReplaceRequests
+        })
+    }
+    catch(error){
+        res.status(404).json({ message: error.message })
+    }
+}

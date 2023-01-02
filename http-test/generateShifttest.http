@@ -7,14 +7,14 @@ POST http://localhost:5000/private/shift/generate-calendar
 Content-Type: application/json
 
 {
-    "currentMonth": 9
+    "currentMonth": 0
 }
 
 ###
 
 # get calender by current month
 
-GET http://localhost:5000/private/shift/get-calendar?currentMonth=11
+GET http://localhost:5000/private/shift/get-calendar?currentMonth=0
 Content-Type: application/json
 
 ###
@@ -22,8 +22,8 @@ POST http://localhost:5000/private/shift/add-slot
 Content-Type: application/json
 
 {
-    "slotTime": "07:00 PM - 08:00 PM",
-    "isNight": false
+    "slotTime": "11:00 PM - 12:00 AM",
+    "isNight": true
 }
 
 ###
@@ -101,3 +101,8 @@ Content-Type: application/json
     "start": "10:00 AM",
     "end": "1:00 PM"
 }
+
+###
+#SHIFT REPLACEMENT REQUESTS
+GET http://localhost:5000/private/shift/get-shift-replace-requests
+Content-Type: application/json
