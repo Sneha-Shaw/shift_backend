@@ -544,7 +544,7 @@ export const getCalendar = async (req, res) => {
             }
         })
         if (!getCalendar) {
-            res.status(404).json({ 
+            res.status(404).json({
                 success: false,
                 message: "Calendar not found!"
             })
@@ -559,7 +559,7 @@ export const getCalendar = async (req, res) => {
     }
     catch (err) {
         res.status(400).json({ message: err.message })
-    }   
+    }
 }
 
 
@@ -735,13 +735,13 @@ export const updateAllSlot = async (req, res) => {
 export const getAllSlots = async (req, res) => {
     try {
         var getAllSlots = await SlotModel.find()
-        if(getAllSlots){
+        if (getAllSlots) {
             res.status(200).json({
                 success: true,
                 message: "Slots found!",
                 getAllSlots
             })
-        }else{
+        } else {
             res.status(404).json({
                 success: false,
                 message: "Slots not found!"
@@ -756,9 +756,9 @@ export const getAllSlots = async (req, res) => {
 //@route: POST /shift/shift-replace
 //@purpose: : post routes for  user to request shift replace
 export const ShiftReplace = async (req, res) => {
-    try{
-    const { name, replacement, date, start, end } = req.body
-        
+    try {
+        const { name, replacement, date, start, end } = req.body
+
         const newShiftReplaceRequest = new shiftReplaceModel({
             name,
             replacement,
@@ -772,9 +772,9 @@ export const ShiftReplace = async (req, res) => {
             message: "Shift replace request sent successfully!",
             saveShiftReplaceRequest
         })
-    
+
     }
-    catch(error){
+    catch (error) {
         res.status(404).json({ message: error.message })
     }
 }
@@ -782,15 +782,169 @@ export const ShiftReplace = async (req, res) => {
 //@route: GET /shift/get-shift-replace-requests
 //@purpose: : get routes for  user to get shift replace requests
 export const getShiftReplaceRequests = async (req, res) => {
-    try{
-        const getShiftReplaceRequests = await shiftReplaceModel.find().sort({$natural:-1})
+    try {
+        const getShiftReplaceRequests = await shiftReplaceModel.find().sort({ $natural: -1 })
         res.json({
             success: true,
             message: "Shift replace requests found!",
             getShiftReplaceRequests
         })
     }
-    catch(error){
+    catch (error) {
         res.status(404).json({ message: error.message })
+    }
+}
+
+
+//@route: POST /auth/add-availability
+//@purpose: : post routes for  user to add availability
+export const addAvailability = async (req, res) => {
+    const { id, schedule } = req.body
+    // check if user exists
+    const checkUser = await userAccount
+        .findById(id)
+    if (isEmpty(checkUser)) {
+        res.status(404).json({
+            success: false,
+            message: "User not found!"
+        })
+    }
+    else {
+        // if user is already in the availability model then edit it according to the input else create a new
+        const checkAvailability = await availabilityScheduleModel
+            .findOne({ user: id })
+        if (isEmpty(checkAvailability)) {
+            const newAvailability = new availabilityScheduleModel({
+                schedule,
+                user: id
+            })
+            const saveAvailability = await newAvailability.save()
+            res.json({
+                success: true,
+                message: "Availability added successfully!",
+                saveAvailability
+            })
+        }
+        else {
+            const editAvailability = await availabilityScheduleModel
+                .findOneAndUpdate(
+                    { user: id },
+                    {
+                        //    get all elements from schedule then push in schedule
+                        $push: {
+                            schedule: {
+                                $each: schedule
+                            }
+                        }
+                    },
+                    {
+                        new: true
+                    }
+                )
+            res.json({
+                success: true,
+                message: "Availability edited successfully!",
+                editAvailability
+            })
+        }
+    }
+}
+
+// @route: GET /auth/:id/get-availability   
+// @purpose: : get routes for  user to get availability
+export const getAvailability = async (req, res) => {
+    try {
+        const id = req.params.id
+        const getAvailability = await availabilityScheduleModel
+            .find({ user: id })
+            .sort({ $natural: -1 })
+            .populate('user', 'name email mobile')
+        res.status(200).json(getAvailability)
+    } catch (error) {
+        res.status(404).json({ message: error.message })
+    }
+}
+
+// @route: GET /auth/get-availability-by-date
+// @purpose: : get routes for  user to get availability by date
+export const getAvailabilityByDate = async (req, res) => {
+    try {
+        const { date } = req.query
+        const getAvailabilityByDate = await availabilityScheduleModel
+            .find({ schedule: { $elemMatch: { date: date } } })
+            .sort({ $natural: -1 })
+            .populate('user', 'name email mobile')
+        res.status(200).json(getAvailabilityByDate)
+    } catch (error) {
+        res.status(404).json({ message: error.message })
+    }
+}
+
+// @route: GET /auth/get-all-availability
+// @purpose: : get routes for  user to get all availability
+export const getAllAvailability = async (req, res) => {
+    try {
+        const getAllAvailability = await availabilityScheduleModel
+            .find()
+            .sort({ $natural: -1 })
+            .populate('user', 'name email mobile')
+        res.status(200).json(getAllAvailability)
+    } catch (error) {
+        res.status(404).json({ message: error.message })
+    }
+}
+
+//@route: DELETE /auth/delete-availability
+//@purpose: : post routes for  user to delete availability
+export const deleteAvailability = async (req, res) => {
+    const { id } = req.body
+    // check if user exists
+    const checkUser = await userAccount
+        .findById(id)
+    if (isEmpty(checkUser)) {
+        res.status(404).json({
+            success: false,
+            message: "User not found!"
+        })
+    }
+    else {
+        const deleteAvailability = await availabilityScheduleModel
+            .findOneAndDelete({ user: id })
+        res.json({
+            success: true,
+            message: "Availability deleted successfully!",
+            deleteAvailability
+        })
+    }
+}
+
+// @route: POST /auth/delete-availability-by-date
+// @purpose: : post routes for  user to delete availability by date
+export const deleteAvailabilityByDate = async (req, res) => {
+    const { id, date } = req.body
+    // check if user exists
+    const checkUser = await userAccount
+        .findById(id)
+    if (isEmpty(checkUser)) {
+        res.status(404).json({
+            success: false,
+            message: "User not found!"
+        })
+    }
+    else {
+        const deleteAvailability = await availabilityScheduleModel
+            .findOneAndUpdate(
+                { user: id },
+                {
+                    $pull: { schedule: { date } }
+                },
+                {
+                    new: true
+                }
+            )
+        res.json({
+            success: true,
+            message: "Availability deleted successfully!"
+        })
     }
 }

@@ -106,3 +106,43 @@ Content-Type: application/json
 #SHIFT REPLACEMENT REQUESTS
 GET http://localhost:5000/private/shift/get-shift-replace-requests
 Content-Type: application/json
+###
+# ADD AVAILABILITY
+POST http://localhost:5000/private/shift/add-availability
+Content-Type: application/json
+
+{
+    "id":"63b05d87afc00d82ddec2833",
+    "schedule":[
+    {
+    "date":"2023-01-05",
+    "start":"10:00 AM",
+    "end":"1:00 PM"
+    }
+    ]
+}
+
+###
+
+# GET AVAILABILITY
+GET http://localhost:5000/private/shift/63a95a79827a4f6c6af5823c/get-availability
+Content-Type: application/json
+###
+# GET ALL AVAILABILITY
+GET http://localhost:5000/private/shift/get-all-availability
+
+###
+# GET AVAILABILITY BY DATE
+GET http://localhost:5000/private/shift/get-availability-by-date?date=2023-01-07
+Content-Type: application/json
+
+###
+
+# DELETE AVAILABILITY BY DATE
+PUT http://localhost:5000/private/shift/delete-availability-by-date
+Content-Type: application/json
+
+{
+    "id":"63a95a79827a4f6c6af5823c",
+    "date":"2023-01-10"
+}

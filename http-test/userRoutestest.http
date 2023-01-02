@@ -10,7 +10,7 @@ Content-Type: application/json
 ###
 
 # GET USER
-GET http://localhost:5000/public/auth/
+GET http://localhost:5000/public/auth/get-all-users
 Content-Type: application/json
 ###
 
@@ -39,36 +39,6 @@ Content-Type: application/json
 
 {
    "request": "He is given a break from 4 PM to 5 PM for Yoga during the month of November"
-}
-###
-# ADD AVAILABILITY
-POST http://localhost:5000/public/auth/63a95a79827a4f6c6af5823c/add-availability
-Content-Type: application/json
-
-{
-    "schedule":[
-       
-        {
-            "day": "Friday",
-            "start": "2:00 AM",
-            "end": "8:00 AM"
-        }
-    ]
-}
-
-###
-
-# GET AVAILABILITY
-GET http://localhost:5000/public/auth/63a95a79827a4f6c6af5823c/get-availability
-Content-Type: application/json
-###
-
-# DELETE AVAILABILITY
-PUT http://localhost:5000/public/auth/63a95a79827a4f6c6af5823c/delete-availability-by-day
-Content-Type: application/json
-
-{
-    "day": "Monday"
 }
 ###
 # REQUEST LEAVE
