@@ -1,13 +1,18 @@
 POST http://localhost:5000/private/shift/generate-shift
 Content-Type: application/json
 
+{
+    "currentMonth": 0,
+    "currentYear":2023
+}
+
 ###
 
 POST http://localhost:5000/private/shift/generate-calendar
 Content-Type: application/json
 
 {
-    "currentMonth": 0
+    "currentMonth": 11
 }
 
 ###

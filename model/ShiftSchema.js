@@ -8,22 +8,16 @@ const shiftSchema = new schema({
         default: "Untitled"
     },
     shiftStartTime: {
-        type: String,
-        required: true
+        type: String
     },
     shiftEndTime: {
-        type: String,
-        required: true
+        type: String
     },
     shiftDuration: {
         type: Number,
         default: 1
     },
-    shiftStartDate:{
-        type: String,
-        required: true
-    },
-    shiftEndDate:{
+    shiftDate:{
         type: String,
         required: true
     },
@@ -32,6 +26,10 @@ const shiftSchema = new schema({
         ref: "Break"
     },
     shiftDay:{
+        type: String,
+        required: true
+    },
+    shiftTime:{
         type: String,
         required: true
     },

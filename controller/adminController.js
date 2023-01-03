@@ -194,9 +194,19 @@ export const addDoctor = async (req, res) => {
 // @route: GET /admin/search-doctor
 // @purpose: : get routes for  admin to search doctor
 export const searchDoctor = async (req, res) => {
-    const { name } = req.query
+    let { name } = req.query
+
+    name = name?
+    {
+        name:{
+            $regex: name,
+            $options: 'i'
+        }
+    }
+    :
+    {}
     const searchDoctor = await userAccount.find({
-        name: name
+         ...name
     })
     if (searchDoctor) {
         res.json({

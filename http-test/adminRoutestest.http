@@ -119,5 +119,5 @@ Content-Type: application/json
 ###
 
 #  SEARCH DOCTOR
-GET http://localhost:5000/public/admin/search-doctor?name=shubham	
+GET http://localhost:5000/public/admin/search-doctor?name=shaan	
 Content-Type: application/json

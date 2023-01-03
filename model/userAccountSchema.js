@@ -54,7 +54,7 @@ const userAcSchema = new schema({
     },
     AllotmentPerDay: [
         {
-            dutyHoursAllotedPerDay: {
+            dutyHoursAlloted: {
                 type: Number,
                 default: 0
             },
