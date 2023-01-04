@@ -42,132 +42,326 @@ export const generateShift = async (req, res) => {
         var getAllDoctorNames = getAllDoctor.map((doctor) => doctor.name)
 
         // traverse through all the days
-        for (let i = 3; i < 6; i++) {
+        for (let i = 3; i < 5; i++) {
             // traverse through all slots
             for (let j = 0; j < 24; j++) {
                 // traverse through all doctors
                 for (let k = 0; k < getAllDoctorIds.length; k++) {
-                    // get doctor id
-                    var doctorId = getAllDoctorIds[k]
-                    // get doctor name
-                    var doctorName = getAllDoctorNames[k]
-                    // get doctor schedule
-                    var getDoctorSchedule = await availabilityScheduleModel.findOne({
-                        user: doctorId
-                    })
-                    // get current doctors schedule array 
-                    var getDoctorScheduleArrayDate = getDoctorSchedule?.schedule?.map((date) => date.date)
-                    //   extract date from 2023-01-02 and parse int
-                    var getDoctorScheduleArrayDayDate = getDoctorScheduleArrayDate?.map((date) => parseInt(date.split('-')[2]))
-                    // extract month from 2023-01-02 and parse int
-                    var getDoctorScheduleArrayMonthDate = getDoctorScheduleArrayDate?.map((date) => parseInt(date.split('-')[1]))
-                    // extract first four letters from 2023-01-02 and parse int
-                    var getDoctorScheduleArrayYearDate = getDoctorScheduleArrayDate?.map((date) => parseInt(date.slice(0, 4)))
+                    if (getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted < getSlot[j].Allotment[getSlotArrayIndex].DoctorsNeeded) {
+                        // get doctor id
+                        var doctorId = getAllDoctorIds[k]
 
-                    // get current day
-                    var currentDay = getCalendarArray[i].dayName
-                    console.log(i + 1, currentMonth + 1, currentYear);
-                    // if current date is in getDoctorScheduleArrayDate and current month is ingetDoctorScheduleArrayMonthDate
-                    if (getDoctorScheduleArrayDayDate?.includes(i + 1) && getDoctorScheduleArrayMonthDate?.includes(currentMonth + 1) && getDoctorScheduleArrayYearDate?.includes(currentYear)) {
-                        // get current slot
-                        var currentSlot = getSlot[j].slotTime
-                        // console.log('hi',);
-                        // check if currentSlot is night
-                        if (getSlot[j].isNight === true) {
-                            // console.log('currentSlot', currentSlot);
-                            // check if current doctor has opt for nightDuty
-                            if (getAllDoctor[k].nightDuty === true) {
-                                // console.log('currentSlot', getAllDoctor[k].nightDuty);
-                                var isPresent = await ShiftModel.findOne({
-                                    shiftDate: currentYear + '-' + (currentMonth + 1) + '-' + (i + 1),
-                                    shiftTime: currentSlot,
-                                    slot: getSlot[j]._id
 
+                        if (getSlot[j].Allotment[getSlotArrayIndex].SeniorAlloted < getSlot[j].Allotment[getSlotArrayIndex].SeniorNeeded) {
+                            // check if designation of current doctor is senior
+                            if (getAllDoctor[k].designation === 'Senior') {
+                                var getDoctorSchedule = await availabilityScheduleModel.findOne({
+                                    user: doctorId
                                 })
-                                if (!isPresent) {
-                                    var createShift = new ShiftModel({
-                                        // push doctorId in doctors array
-                                        doctors: doctorId,
-                                        shiftDate: currentYear + '-' + (currentMonth + 1) + '-' + (i + 1),
-                                        shiftDay: currentDay,
-                                        shiftTime: currentSlot,
-                                        slot: getSlot[j]._id
-                                    })
 
-                                    await createShift.save()
-                                }
+                                // get current doctors schedule array 
+                                var getDoctorScheduleArrayDate = getDoctorSchedule?.schedule?.map((date) => date.date)
+                                //   extract date from 2023-01-02 and parse int
+                                var getDoctorScheduleArrayDayDate = getDoctorScheduleArrayDate?.map((date) => parseInt(date.split('-')[2]))
+                                // extract month from 2023-01-02 and parse int
+                                var getDoctorScheduleArrayMonthDate = getDoctorScheduleArrayDate?.map((date) => parseInt(date.split('-')[1]))
+                                // extract first four letters from 2023-01-02 and parse int
+                                var getDoctorScheduleArrayYearDate = getDoctorScheduleArrayDate?.map((date) => parseInt(date.slice(0, 4)))
 
-                            }
-                        }
-                        else {
+                                // get current day
+                                var currentDay = getCalendarArray[i].dayName
+                                console.log(i + 1, currentMonth + 1, currentYear);
+                                // if current date is in getDoctorScheduleArrayDate and current month is ingetDoctorScheduleArrayMonthDate
+                                if (getDoctorScheduleArrayDayDate?.includes(i + 1) && getDoctorScheduleArrayMonthDate?.includes(currentMonth + 1) && getDoctorScheduleArrayYearDate?.includes(currentYear)) {
+                                    // get current slot
+                                    var currentSlot = getSlot[j].slotTime
+                                    // check if currentSlot is night
+                                    if (getSlot[j].isNight === true) {
+
+                                        // check if current doctor has opt for nightDuty
+                                        if (getAllDoctor[k].nightDuty === true) {
+                                            // check if shift is already present
+                                            var isPresent = await ShiftModel.findOne({
+                                                shiftDate: currentYear + '-' + (currentMonth + 1) + '-' + (i + 1),
+                                                shiftTime: currentSlot,
+                                                slot: getSlot[j]._id
+
+                                            })
+                                            if (!isPresent) {
+                                                var createShift = new ShiftModel({
+                                                    doctors: doctorId,
+                                                    shiftDate: currentYear + '-' + (currentMonth + 1) + '-' + (i + 1),
+                                                    shiftDay: currentDay,
+                                                    shiftTime: currentSlot,
+                                                    slot: getSlot[j]._id
+                                                })
+
+                                                await createShift.save()
+
+                                                // filter currentday in getSLot[j] and add 1 to DoctorsAlloted
+                                                var getSlotArray = getSlot[j]?.Allotment?.filter((day) => day.day === currentDay)
+                                                var getSlotArrayIndex = getSlot[j]?.Allotment?.indexOf(getSlotArray[0])
+                                                if (getSlot[j] && getSlot[j].Allotment[getSlotArrayIndex] && getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted) {
+                                                    getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted = getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted + 1
+                                                    getSlot[j].Allotment[getSlotArrayIndex].SeniorAlloted = getSlot[j].Allotment[getSlotArrayIndex].SeniorAlloted + 1
+
+                                                }
+                                                await getSlot[j].save()
+
+                                                // if getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted===getSlot[j].Allotment[getSlotArrayIndex].DoctorsNeeded
+                                                if (getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted === getSlot[j].Allotment[getSlotArrayIndex].DoctorsNeeded) {
+                                                    getSlot[j].Allotment[getSlotArrayIndex].isFulfilled = true
+                                                    await getSlot[j].save()
+                                                    break;
+                                                }
 
 
-                            //filter date in doctor schedule and get start tine
-                            var getDoctorScheduleArrayStartTime = getDoctorSchedule.schedule.map((day) => day.start)
-                            //filter date in doctor schedule and get end tine
-                            var getDoctorScheduleArrayEndTime = getDoctorSchedule.schedule.map((day) => day.end)
+                                            }
 
-                            // if date is single digit then add 0 
-                            var currentDate = i + 1 < 10 ? '0' + (i + 1) : i + 1
-                            // if month is single digit then add 0
-                            var currentMonthd = currentMonth + 1 < 10 ? '0' + (currentMonth + 1) : currentMonth + 1
-                            // get current date in format 2023-01-02
-                            var currentDate = currentYear + '-' + currentMonthd + '-' + currentDate
-                            // get index of current date in getDoctorScheduleArrayDate
-                            var index = getDoctorScheduleArrayDate.indexOf(currentDate)
-
-                            // get start time of current date
-                            var currentDoctorScheduleStartTime = getDoctorScheduleArrayStartTime[index]
-                            // get end time of current date
-                            var currentDoctorScheduleEndTime = getDoctorScheduleArrayEndTime[index]
-
-                            // extract start time from currentslot ex:09:00 PM - 10:00 PM
-                            var currentSlotStartTime = currentSlot.split('-')[0].trim()
-                            // extract end time from currentslot ex:09:00 PM - 10:00 PM
-                            var currentSlotEndTime = currentSlot.split('-')[1].trim()
-
-                            // convert currentSlotStartTime to 24 hour format
-                            var currentSlotStartTime = moment(currentSlotStartTime, ["h:mm A"]).format("HH:mm")
-                            // convert currentSlotEndTime to 24 hour format
-                            var currentSlotEndTime = moment(currentSlotEndTime, ["h:mm A"]).format("HH:mm")
-
-                            // convert currentDoctorScheduleStartTime to 24 hour format
-                            var currentDoctorScheduleStartTime = moment(currentDoctorScheduleStartTime, ["h:mm A"]).format("HH:mm")
-                            // convert currentDoctorScheduleEndTime to 24 hour format
-                            var currentDoctorScheduleEndTime = moment(currentDoctorScheduleEndTime, ["h:mm A"]).format("HH:mm")
-
-                            // check if currentSlotStartTime is greater than currentDoctorScheduleStartTime
-                            if (currentSlotStartTime >= currentDoctorScheduleStartTime) {
-                                // check if currentSlotEndTime is less than currentDoctorScheduleEndTime
-                                if (currentSlotEndTime <= currentDoctorScheduleEndTime) {
-                                    var isPresent = await ShiftModel.findOne({
-                                        shiftDate: currentYear + '-' + (currentMonth + 1) + '-' + (i + 1),
-                                        shiftTime: currentSlot,
-                                        slot: getSlot[j]._id
-
-                                    })
-                                    if (!isPresent) {
-                                        var createShift = new ShiftModel({
-                                            // push doctorId in doctors array
-                                            doctors: doctorId,
-                                            shiftDate: currentYear + '-' + (currentMonth + 1) + '-' + (i + 1),
-                                            shiftDay: currentDay,
-                                            shiftTime: currentSlot,
-                                            slot: getSlot[j]._id
-                                        })
-
-                                        await createShift.save()
+                                        }
                                     }
+                                    else {
+
+
+                                        //filter date in doctor schedule and get start tine
+                                        var getDoctorScheduleArrayStartTime = getDoctorSchedule.schedule.map((day) => day.start)
+                                        //filter date in doctor schedule and get end tine
+                                        var getDoctorScheduleArrayEndTime = getDoctorSchedule.schedule.map((day) => day.end)
+
+                                        // if date is single digit then add 0 
+                                        var currentDate = i + 1 < 10 ? '0' + (i + 1) : i + 1
+                                        // if month is single digit then add 0
+                                        var currentMonthd = currentMonth + 1 < 10 ? '0' + (currentMonth + 1) : currentMonth + 1
+                                        // get current date in format 2023-01-02
+                                        var currentDate = currentYear + '-' + currentMonthd + '-' + currentDate
+                                        // get index of current date in getDoctorScheduleArrayDate
+                                        var index = getDoctorScheduleArrayDate.indexOf(currentDate)
+
+                                        // get start time of current date
+                                        var currentDoctorScheduleStartTime = getDoctorScheduleArrayStartTime[index]
+                                        // get end time of current date
+                                        var currentDoctorScheduleEndTime = getDoctorScheduleArrayEndTime[index]
+
+                                        // extract start time from currentslot ex:09:00 PM - 10:00 PM
+                                        var currentSlotStartTime = currentSlot.split('-')[0].trim()
+                                        // extract end time from currentslot ex:09:00 PM - 10:00 PM
+                                        var currentSlotEndTime = currentSlot.split('-')[1].trim()
+
+                                        // convert currentSlotStartTime to 24 hour format
+                                        var currentSlotStartTime = moment(currentSlotStartTime, ["h:mm A"]).format("HH:mm")
+                                        // convert currentSlotEndTime to 24 hour format
+                                        var currentSlotEndTime = moment(currentSlotEndTime, ["h:mm A"]).format("HH:mm")
+
+                                        // convert currentDoctorScheduleStartTime to 24 hour format
+                                        var currentDoctorScheduleStartTime = moment(currentDoctorScheduleStartTime, ["h:mm A"]).format("HH:mm")
+                                        // convert currentDoctorScheduleEndTime to 24 hour format
+                                        var currentDoctorScheduleEndTime = moment(currentDoctorScheduleEndTime, ["h:mm A"]).format("HH:mm")
+
+                                        // check if currentSlotStartTime is greater than currentDoctorScheduleStartTime
+                                        if (currentSlotStartTime >= currentDoctorScheduleStartTime) {
+                                            // check if currentSlotEndTime is less than currentDoctorScheduleEndTime
+                                            if (currentSlotEndTime <= currentDoctorScheduleEndTime) {
+                                                var isPresent = await ShiftModel.findOne({
+                                                    shiftDate: currentYear + '-' + (currentMonth + 1) + '-' + (i + 1),
+                                                    shiftTime: currentSlot,
+                                                    slot: getSlot[j]._id
+
+                                                })
+                                                if (!isPresent) {
+                                                    var createShift = new ShiftModel({
+                                                        // push doctorId in doctors array
+                                                        doctors: doctorId,
+                                                        shiftDate: currentYear + '-' + (currentMonth + 1) + '-' + (i + 1),
+                                                        shiftDay: currentDay,
+                                                        shiftTime: currentSlot,
+                                                        slot: getSlot[j]._id
+                                                    })
+
+                                                    await createShift.save()
+                                                    // filter currentday in getSLot[j] and add 1 to DoctorsAlloted
+                                                    var getSlotArray = getSlot[j]?.Allotment?.filter((day) => day.day === currentDay)
+                                                    var getSlotArrayIndex = getSlot[j]?.Allotment?.indexOf(getSlotArray[0])
+                                                    if (getSlot[j] && getSlot[j].Allotment[getSlotArrayIndex] && getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted) {
+                                                        getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted = getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted + 1
+                                                        getSlot[j].Allotment[getSlotArrayIndex].SeniorAlloted = getSlot[j].Allotment[getSlotArrayIndex].SeniorAlloted + 1
+
+                                                    }
+                                                    await getSlot[j].save()
+
+                                                    // if getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted===getSlot[j].Allotment[getSlotArrayIndex].DoctorsNeeded
+                                                    if (getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted === getSlot[j].Allotment[getSlotArrayIndex].DoctorsNeeded) {
+                                                        getSlot[j].Allotment[getSlotArrayIndex].isFulfilled = true
+                                                        await getSlot[j].save()
+                                                        break;
+                                                    }
+                                                }
+                                            }
+                                        }
+
+                                    }
+
+                                }
+                            }
+                            else {
+                                // check if designation of current doctor is regular
+                                if (getAllDoctor[k].designation === 'Regular') {
+                                    // get doctor schedule
+                                    var getDoctorSchedule = await availabilityScheduleModel.findOne({
+                                        user: doctorId
+                                    })
+
+                                    // get current doctors schedule array 
+                                    var getDoctorScheduleArrayDate = getDoctorSchedule?.schedule?.map((date) => date.date)
+                                    //   extract date from 2023-01-02 and parse int
+                                    var getDoctorScheduleArrayDayDate = getDoctorScheduleArrayDate?.map((date) => parseInt(date.split('-')[2]))
+                                    // extract month from 2023-01-02 and parse int
+                                    var getDoctorScheduleArrayMonthDate = getDoctorScheduleArrayDate?.map((date) => parseInt(date.split('-')[1]))
+                                    // extract first four letters from 2023-01-02 and parse int
+                                    var getDoctorScheduleArrayYearDate = getDoctorScheduleArrayDate?.map((date) => parseInt(date.slice(0, 4)))
+
+                                    // get current day
+                                    var currentDay = getCalendarArray[i].dayName
+                                    console.log(i + 1, currentMonth + 1, currentYear);
+                                    // if current date is in getDoctorScheduleArrayDate and current month is ingetDoctorScheduleArrayMonthDate
+                                    if (getDoctorScheduleArrayDayDate?.includes(i + 1) && getDoctorScheduleArrayMonthDate?.includes(currentMonth + 1) && getDoctorScheduleArrayYearDate?.includes(currentYear)) {
+                                        // get current slot
+                                        var currentSlot = getSlot[j].slotTime
+                                        // check if currentSlot is night
+                                        if (getSlot[j].isNight === true) {
+
+                                            // check if current doctor has opt for nightDuty
+                                            if (getAllDoctor[k].nightDuty === true) {
+                                                // check if shift is already present
+                                                var isPresent = await ShiftModel.findOne({
+                                                    shiftDate: currentYear + '-' + (currentMonth + 1) + '-' + (i + 1),
+                                                    shiftTime: currentSlot,
+                                                    slot: getSlot[j]._id
+
+                                                })
+                                                if (!isPresent) {
+                                                    var createShift = new ShiftModel({
+                                                        // push doctorId in doctors array
+                                                        doctors: doctorId,
+                                                        shiftDate: currentYear + '-' + (currentMonth + 1) + '-' + (i + 1),
+                                                        shiftDay: currentDay,
+                                                        shiftTime: currentSlot,
+                                                        slot: getSlot[j]._id
+                                                    })
+
+                                                    await createShift.save()
+
+                                                    // filter currentday in getSLot[j] and add 1 to DoctorsAlloted
+                                                    var getSlotArray = getSlot[j]?.Allotment?.filter((day) => day.day === currentDay)
+                                                    var getSlotArrayIndex = getSlot[j]?.Allotment?.indexOf(getSlotArray[0])
+                                                    if (getSlot[j] && getSlot[j].Allotment[getSlotArrayIndex] && getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted) {
+                                                        getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted = getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted + 1
+                                                    }
+                                                    await getSlot[j].save()
+
+                                                    // if getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted===getSlot[j].Allotment[getSlotArrayIndex].DoctorsNeeded
+                                                    if (getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted === getSlot[j].Allotment[getSlotArrayIndex].DoctorsNeeded) {
+                                                        getSlot[j].Allotment[getSlotArrayIndex].isFulfilled = true
+                                                        await getSlot[j].save()
+                                                        break;
+                                                    }
+
+
+                                                }
+
+                                            }
+                                        }
+                                        else {
+
+
+                                            //filter date in doctor schedule and get start tine
+                                            var getDoctorScheduleArrayStartTime = getDoctorSchedule.schedule.map((day) => day.start)
+                                            //filter date in doctor schedule and get end tine
+                                            var getDoctorScheduleArrayEndTime = getDoctorSchedule.schedule.map((day) => day.end)
+
+                                            // if date is single digit then add 0 
+                                            var currentDate = i + 1 < 10 ? '0' + (i + 1) : i + 1
+                                            // if month is single digit then add 0
+                                            var currentMonthd = currentMonth + 1 < 10 ? '0' + (currentMonth + 1) : currentMonth + 1
+                                            // get current date in format 2023-01-02
+                                            var currentDate = currentYear + '-' + currentMonthd + '-' + currentDate
+                                            // get index of current date in getDoctorScheduleArrayDate
+                                            var index = getDoctorScheduleArrayDate.indexOf(currentDate)
+
+                                            // get start time of current date
+                                            var currentDoctorScheduleStartTime = getDoctorScheduleArrayStartTime[index]
+                                            // get end time of current date
+                                            var currentDoctorScheduleEndTime = getDoctorScheduleArrayEndTime[index]
+
+                                            // extract start time from currentslot ex:09:00 PM - 10:00 PM
+                                            var currentSlotStartTime = currentSlot.split('-')[0].trim()
+                                            // extract end time from currentslot ex:09:00 PM - 10:00 PM
+                                            var currentSlotEndTime = currentSlot.split('-')[1].trim()
+
+                                            // convert currentSlotStartTime to 24 hour format
+                                            var currentSlotStartTime = moment(currentSlotStartTime, ["h:mm A"]).format("HH:mm")
+                                            // convert currentSlotEndTime to 24 hour format
+                                            var currentSlotEndTime = moment(currentSlotEndTime, ["h:mm A"]).format("HH:mm")
+
+                                            // convert currentDoctorScheduleStartTime to 24 hour format
+                                            var currentDoctorScheduleStartTime = moment(currentDoctorScheduleStartTime, ["h:mm A"]).format("HH:mm")
+                                            // convert currentDoctorScheduleEndTime to 24 hour format
+                                            var currentDoctorScheduleEndTime = moment(currentDoctorScheduleEndTime, ["h:mm A"]).format("HH:mm")
+
+                                            // check if currentSlotStartTime is greater than currentDoctorScheduleStartTime
+                                            if (currentSlotStartTime >= currentDoctorScheduleStartTime) {
+                                                // check if currentSlotEndTime is less than currentDoctorScheduleEndTime
+                                                if (currentSlotEndTime <= currentDoctorScheduleEndTime) {
+                                                    var isPresent = await ShiftModel.findOne({
+                                                        shiftDate: currentYear + '-' + (currentMonth + 1) + '-' + (i + 1),
+                                                        shiftTime: currentSlot,
+                                                        slot: getSlot[j]._id
+
+                                                    })
+                                                    if (!isPresent) {
+                                                        var createShift = new ShiftModel({
+                                                            // push doctorId in doctors array
+                                                            doctors: doctorId,
+                                                            shiftDate: currentYear + '-' + (currentMonth + 1) + '-' + (i + 1),
+                                                            shiftDay: currentDay,
+                                                            shiftTime: currentSlot,
+                                                            slot: getSlot[j]._id
+                                                        })
+
+                                                        await createShift.save()
+                                                        // filter currentday in getSLot[j] and add 1 to DoctorsAlloted
+                                                        var getSlotArray = getSlot[j]?.Allotment?.filter((day) => day.day === currentDay)
+                                                        var getSlotArrayIndex = getSlot[j]?.Allotment?.indexOf(getSlotArray[0])
+                                                        if (getSlot[j] && getSlot[j].Allotment[getSlotArrayIndex] && getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted) {
+                                                            getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted = getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted + 1
+                                                        }
+                                                        await getSlot[j].save()
+
+                                                        // if getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted===getSlot[j].Allotment[getSlotArrayIndex].DoctorsNeeded
+                                                        if (getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted === getSlot[j].Allotment[getSlotArrayIndex].DoctorsNeeded) {
+                                                            getSlot[j].Allotment[getSlotArrayIndex].isFulfilled = true
+                                                            await getSlot[j].save()
+                                                            break;
+                                                        }
+                                                    }
+                                                }
+                                            }
+
+                                        }
+
+                                    }
+
                                 }
                             }
 
                         }
-
                     }
                 }
             }
+            res.status(200).json({
+                success: true,
+                message: 'Shift created'
+            })
         }
-        res.status(200).json({ message: 'Shift created' })
     }
     catch (error) {
         console.log(error.message);

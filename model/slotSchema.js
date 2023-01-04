@@ -10,10 +10,12 @@ const slotSchema = new schema({
     Allotment:[
         {
             DoctorsNeeded: {
-                type: Number
+                type: Number,
+                default:0
             },
             SeniorNeeded: {
-                type: Number
+                type: Number,
+                default: 0
             },
             DoctorsAlloted:{
                 type: Number,
