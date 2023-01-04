@@ -24,7 +24,8 @@ export const loginUser = async (req, res) => {
                 message: "Login successfully!",
                 name: checkEmail.name,
                 _id: checkEmail._id,
-                email: checkEmail.email
+                email: checkEmail.email, 
+                token: generateToken(checkEmail._id)
 
             })
         } else {
