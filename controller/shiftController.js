@@ -12,7 +12,7 @@ import env from 'dotenv'
 
 env.config()
 
-//@route: POST /auth/generate-shift
+//@route: POST /shift/generate-shift
 //@purpose: : post routes to generate shift of a month with respective days by checking in doctors schedule and available slot time
 export const generateShift = async (req, res) => {
     const { currentMonth, currentYear } = req.body
@@ -852,7 +852,7 @@ export const getShiftReplaceRequests = async (req, res) => {
 }
 
 
-//@route: POST /auth/add-availability
+//@route: POST /shift/add-availability
 //@purpose: : post routes for  user to add availability
 export const addAvailability = async (req, res) => {
     const { id, schedule } = req.body
@@ -906,7 +906,7 @@ export const addAvailability = async (req, res) => {
     }
 }
 
-// @route: GET /auth/:id/get-availability   
+// @route: GET /shift/:id/get-availability   
 // @purpose: : get routes for  user to get availability
 export const getAvailability = async (req, res) => {
     try {
@@ -921,7 +921,7 @@ export const getAvailability = async (req, res) => {
     }
 }
 
-// @route: GET /auth/get-availability-by-date
+// @route: GET /shift/get-availability-by-date
 // @purpose: : get routes for  user to get availability by date
 export const getAvailabilityByDate = async (req, res) => {
     try {
@@ -936,13 +936,13 @@ export const getAvailabilityByDate = async (req, res) => {
     }
 }
 
-// @route: GET /auth/get-all-availability
+// @route: GET /shift/get-all-availability
 // @purpose: : get routes for  user to get all availability
 export const getAllAvailability = async (req, res) => {
     try {
+    //    get availability.schedule
         const getAllAvailability = await availabilityScheduleModel
             .find()
-            .sort({ $natural: -1 })
             .populate('user', 'name email mobile')
         res.status(200).json(getAllAvailability)
     } catch (error) {
@@ -950,7 +950,7 @@ export const getAllAvailability = async (req, res) => {
     }
 }
 
-//@route: DELETE /auth/delete-availability
+//@route: DELETE /shift/delete-availability
 //@purpose: : post routes for  user to delete availability
 export const deleteAvailability = async (req, res) => {
     const { id } = req.body
@@ -974,7 +974,7 @@ export const deleteAvailability = async (req, res) => {
     }
 }
 
-// @route: POST /auth/delete-availability-by-date
+// @route: POST /shift/delete-availability-by-date
 // @purpose: : post routes for  user to delete availability by date
 export const deleteAvailabilityByDate = async (req, res) => {
     const { id, date } = req.body

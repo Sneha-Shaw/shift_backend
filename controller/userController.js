@@ -1,7 +1,6 @@
 import userAccount from '../model/userAccountSchema.js'
 import leaveRequestModel from '../model/LeaveRequestSchema.js'
 import specialRequestModel from '../model/specialRequestSchema.js'
-import availabilityScheduleModel from '../model/AvailabilityScheduleSchema.js'
 import { generateToken } from '../utils/generateToken.js'
 import bcrypt from 'bcryptjs'
 import env from 'dotenv'
