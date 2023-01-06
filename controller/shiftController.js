@@ -882,18 +882,7 @@ export const addAvailability = async (req, res) => {
             })
         }
         else {
-            //  check schedule.start and schedule.end is already in database for the user
-            const checkSchedule = await availabilityScheduleModel
-                .findOne({
-                    user: id,
-                    schedule: {
-                        $elemMatch: {
-                            start: schedule[0].start,
-                            end: schedule[0].end
-                        }
-                    }
-                })
-            if (isEmpty(checkSchedule)) {
+           
                 // add data in schedule
                 const saveAvailability = await availabilityScheduleModel
                     .findOneAndUpdate(
@@ -920,13 +909,8 @@ export const addAvailability = async (req, res) => {
                     message: "Availability added successfully!",
                     saveAvailability
                 })
-            }
-            else {
-                res.status(400).json({
-                    success: false,
-                    message: "Availability already exists!"
-                })
-            }
+            
+           
         }
     }
 }
