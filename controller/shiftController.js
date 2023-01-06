@@ -977,7 +977,9 @@ export const deleteAvailability = async (req, res) => {
 // @route: POST /shift/delete-availability-by-date
 // @purpose: : post routes for  user to delete availability by date
 export const deleteAvailabilityByDate = async (req, res) => {
-    const { id, date } = req.body
+    const { id, 
+        start,
+        end } = req.body
     // check if user exists
     const checkUser = await userAccount
         .findById(id)
@@ -992,15 +994,22 @@ export const deleteAvailabilityByDate = async (req, res) => {
             .findOneAndUpdate(
                 { user: id },
                 {
-                    $pull: { schedule: { date } }
+                    $pull: { schedule: { 
+                        start: start,
+                        end: end
+                     } }
                 },
                 {
                     new: true
                 }
             )
-        res.json({
-            success: true,
-            message: "Availability deleted successfully!"
-        })
+            if(deleteAvailability){
+                res.json({
+                    success: true,
+                    message: "Availability deleted successfully!",
+                    deleteAvailability
+                })
+            }
+       
     }
 }
