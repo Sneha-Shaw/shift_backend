@@ -53,8 +53,8 @@ export const generateShift = async (req, res) => {
                     if (!isEmpty(getSlotArray)) {
                         getSlotArrayIndex = getSlot[j]?.Allotment.indexOf(getSlotArray[0])
                     }
-                    if (getSlotArrayIndex > -1 && getSlotArrayIndex!==null) {
-                    console.log(getSlotArrayIndex, 'getSlotArrayIndex');
+                    if (getSlotArrayIndex > -1 && getSlotArrayIndex !== null) {
+                        console.log(getSlotArrayIndex, 'getSlotArrayIndex');
 
                         if (getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted < getSlot[j].Allotment[getSlotArrayIndex].DoctorsNeeded) {
                             console.log(getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted, 'getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted ');
@@ -213,7 +213,7 @@ export const generateShift = async (req, res) => {
                                 // filter current date in AllotmentPerDay and get dutyHoursAlloted
                                 var dutyHoursAlloted = getAllDoctor[k].AllotmentPerDay.filter((date) => date.date === i + 1)
                                 console.log(dutyHoursAlloted, 'dutyHoursAlloted');
-                                if (getAllDoctor[k].dutyHoursAllotedPerMonth < getAllDoctor[k].dutyHoursPerMonth ) {
+                                if (getAllDoctor[k].dutyHoursAllotedPerMonth < getAllDoctor[k].dutyHoursPerMonth) {
                                     // check if designation of current doctor is regular
                                     if (getAllDoctor[k].designation === 'Regular') {
                                         // get doctor schedule
@@ -356,7 +356,7 @@ export const generateShift = async (req, res) => {
                     }
                 }
             }
-           
+
         }
         res.status(200).json({
             success: true,
@@ -882,29 +882,56 @@ export const addAvailability = async (req, res) => {
             })
         }
         else {
-            const editAvailability = await availabilityScheduleModel
-                .findOneAndUpdate(
-                    { user: id },
-                    {
-                        //    get all elements from schedule then push in schedule
-                        $push: {
-                            schedule: {
-                                $each: schedule
-                            }
+            //  check schedule.start and schedule.end is already in database for the user
+            const checkSchedule = await availabilityScheduleModel
+                .findOne({
+                    user: id,
+                    schedule: {
+                        $elemMatch: {
+                            start: schedule[0].start,
+                            end: schedule[0].end
                         }
-                    },
-                    {
-                        new: true
                     }
-                )
-            res.json({
-                success: true,
-                message: "Availability edited successfully!",
-                editAvailability
-            })
+                })
+            if (isEmpty(checkSchedule)) {
+                // add data in schedule
+                const saveAvailability = await availabilityScheduleModel
+                    .findOneAndUpdate(
+                        { user: id },
+                        {
+                            //    get all elements from schedule then push in schedule
+                            $push: {
+                                schedule: {
+                                    $each: schedule
+                                }
+                            }
+                        },
+                        {
+                            new: true
+                        }
+                    )
+
+                // save
+                await saveAvailability.save()
+
+                // send availability
+                res.status(200).json({
+                    success: true,
+                    message: "Availability added successfully!",
+                    saveAvailability
+                })
+            }
+            else {
+                res.status(400).json({
+                    success: false,
+                    message: "Availability already exists!"
+                })
+            }
         }
     }
 }
+
+
 
 // @route: GET /shift/:id/get-availability   
 // @purpose: : get routes for  user to get availability
@@ -940,7 +967,7 @@ export const getAvailabilityByDate = async (req, res) => {
 // @purpose: : get routes for  user to get all availability
 export const getAllAvailability = async (req, res) => {
     try {
-    //    get availability.schedule
+        //    get availability.schedule
         const getAllAvailability = await availabilityScheduleModel
             .find()
             .populate('user', 'name email mobile')
@@ -977,7 +1004,7 @@ export const deleteAvailability = async (req, res) => {
 // @route: POST /shift/delete-availability-by-date
 // @purpose: : post routes for  user to delete availability by date
 export const deleteAvailabilityByDate = async (req, res) => {
-    const { id, 
+    const { id,
         start,
         end } = req.body
     // check if user exists
@@ -994,22 +1021,24 @@ export const deleteAvailabilityByDate = async (req, res) => {
             .findOneAndUpdate(
                 { user: id },
                 {
-                    $pull: { schedule: { 
-                        start: start,
-                        end: end
-                     } }
+                    $pull: {
+                        schedule: {
+                            start: start,
+                            end: end
+                        }
+                    }
                 },
                 {
                     new: true
                 }
             )
-            if(deleteAvailability){
-                res.json({
-                    success: true,
-                    message: "Availability deleted successfully!",
-                    deleteAvailability
-                })
-            }
-       
+        if (deleteAvailability) {
+            res.json({
+                success: true,
+                message: "Availability deleted successfully!",
+                deleteAvailability
+            })
+        }
+
     }
 }
