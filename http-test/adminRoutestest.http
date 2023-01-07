@@ -31,13 +31,14 @@ POST http://localhost:5000/public/admin/add-doctor
 Content-Type: application/json
 
 {
-    "name": "Dr. J Doe",
-    "email": "doe71001@gmail.com",
-    "password": "12445",
+    "name": "Dr. jane Doe",
+    "email": "snehashaw122@gmail.com",
+    "password": "12745",
     "mobile": "9876543210",
     "designation": "Regular",
     "type": "permanent",
-    "dutyHoursPerDay": 8
+    "dutyHoursPerDay": 8,
+    "domain": ["ECG","ECHO"]
 }
 ###
 
@@ -51,11 +52,19 @@ Content-Type: application/json
 }
 ###
 # Update doctor
-PUT http://localhost:5000/public/admin/update-doctor/6399892fc3bc19addb15c66e
+PUT http://localhost:5000/public/admin/update-doctor/63a9ad9ec4ccdb71c8b3ced9
 Content-Type: application/json
 
 {
-    "dutyHoursPerMonth": 185
+    "echo": false
+}
+###
+# REMOVE DOMAIN
+PUT http://localhost:5000/public/admin/remove-domain/63a95a79827a4f6c6af5823c
+Content-Type: application/json
+
+{
+    "domain": ["ECHO"]
 }
 ###
 # ADD BREAK

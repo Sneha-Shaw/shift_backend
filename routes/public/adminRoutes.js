@@ -8,6 +8,7 @@ import {
     searchDoctor,
     deleteDoctor,
     updateDoctor,
+    removeDomain,
     getAllDoctors,
     getDoctorById,
     addBreaks,
@@ -32,6 +33,7 @@ route.post('/add-doctor', addDoctor)
 route.get('/search-doctor', searchDoctor)
 route.post('/delete-doctor', deleteDoctor)
 route.put('/update-doctor/:id', updateDoctor)
+route.put('/remove-domain/:id', removeDomain)
 route.get('/get-all-doctors', getAllDoctors)
 route.get('/get-doctor/:id', getDoctorById)
 // break

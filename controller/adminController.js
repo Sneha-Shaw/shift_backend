@@ -147,6 +147,8 @@ export const addDoctor = async (req, res) => {
         mobile,
         password,
         designation,
+        ecg,
+        echo,
         type,
         dutyHoursPerMonth,
         dutyHoursPerDay,
@@ -167,6 +169,8 @@ export const addDoctor = async (req, res) => {
             mobile,
             password,
             designation,
+            ecg,
+            echo,
             type,
             dutyHoursPerMonth,
             dutyHoursPerDay,
@@ -196,17 +200,17 @@ export const addDoctor = async (req, res) => {
 export const searchDoctor = async (req, res) => {
     let { name } = req.query
 
-    name = name?
-    {
-        name:{
-            $regex: name,
-            $options: 'i'
+    name = name ?
+        {
+            name: {
+                $regex: name,
+                $options: 'i'
+            }
         }
-    }
-    :
-    {}
+        :
+        {}
     const searchDoctor = await userAccount.find({
-         ...name
+        ...name
     })
     if (searchDoctor) {
         res.json({
@@ -253,6 +257,8 @@ export const updateDoctor = async (req, res) => {
         email,
         mobile,
         designation,
+        ecg,
+        echo,
         type,
         dutyHoursPerMonth,
         dutyHoursPerDay,
@@ -271,17 +277,65 @@ export const updateDoctor = async (req, res) => {
         updateDoctor.type = type || updateDoctor.type
         updateDoctor.dutyHoursPerMonth = dutyHoursPerMonth || updateDoctor.dutyHoursPerMonth
         updateDoctor.dutyHoursPerDay = dutyHoursPerDay || updateDoctor.dutyHoursPerDay
-        updateDoctor.nightDuty = nightDuty || updateDoctor.nightDuty
+        // check if updateDoctor.nughtDuty is equal to nighduty
+        if (updateDoctor.nightDuty === nightDuty) {
+            updateDoctor.nightDuty =  updateDoctor.nightDuty
+        }
+        else {
+            updateDoctor.nightDuty = nightDuty
+        }
+        // check if updateDoctor.ecg is equal to ecg
+        if (updateDoctor.ecg === ecg) {
+            updateDoctor.ecg =  updateDoctor.ecg
+        }
+        else {
+            updateDoctor.ecg = ecg
+        }
+        // check if updateDoctor.echo is equal to echo
+        if (updateDoctor.echo === echo) {
+            updateDoctor.echo =  updateDoctor.echo
+        }
+        else {
+            updateDoctor.echo = echo
+        }
         updateDoctor.save()
-        res.json({
+        res.status(200).json({
             success: true,
-            message: "Doctor updated successfully!"
+            message: "Doctor updated successfully!",
+            updateDoctor
         })
     }
     else {
         res.status(404).json({
             success: false,
             message: "Doctor not found!"
+        })
+    }
+}
+
+// @route PUT /admin/remove-domain
+// @purpose: : post routes for  admin to update domain
+export const removeDomain = async (req, res) => {
+    const { domain } = req.body
+    const id = req.params.id
+    const removeDomain = await userAccount.findById({
+        _id: id
+    })
+    if (removeDomain) {
+        // check if domain is an array
+        if (Array.isArray(domain)) {
+            domain.forEach((element) => {
+                removeDomain.domain = removeDomain.domain.filter((item) => item !== element)
+            })
+        }
+        else {
+            removeDomain.domain = removeDomain.domain.filter((item) => item !== domain)
+        }
+        console.log(removeDomain.domain);
+        removeDomain.save()
+        res.status(200).json({
+            success: true,
+            message: "Domain removed successfully!"
         })
     }
 }
