@@ -52,11 +52,12 @@ Content-Type: application/json
 }
 ###
 # Update doctor
-PUT http://localhost:5000/public/admin/update-doctor/63a9ad9ec4ccdb71c8b3ced9
+PUT http://localhost:5000/public/admin/update-doctor/63a95a79827a4f6c6af5823c
 Content-Type: application/json
 
 {
-    "echo": false
+    "ecg": true,
+    "echo": true
 }
 ###
 # REMOVE DOMAIN
