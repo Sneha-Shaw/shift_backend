@@ -15,7 +15,7 @@ env.config()
 //@route: POST /shift/generate-shift
 //@purpose: : post routes to generate shift of a month with respective days by checking in doctors schedule and available slot time
 export const generateShift = async (req, res) => {
-    const { currentMonth, currentYear } = req.body
+    const { domain, currentMonth, currentYear } = req.body
 
     try {
         // get calender of current month
