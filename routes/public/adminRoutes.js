@@ -4,6 +4,11 @@ import {
     loginAdmin,
     getAdminProfile,
     updateAdminProfile,
+    addDomain,
+    getAllDomains,
+    getDomainById,
+    updateDomain,
+    deleteDomain,
     addDoctor,
     searchDoctor,
     deleteDoctor,
@@ -48,5 +53,11 @@ route.put('/approve-deny-leave/:id', approveDenyLeave)
 // special requests
 route.get('/get-all-special-requests', getSpecialRequests)
 route.put('/approve-deny-special-request/:id', approveDenySpecialRequest)
+// domain
+route.post('/add-domain', addDomain)
+route.get('/get-all-domains', getAllDomains)
+route.get('/get-domain/:id', getDomainById)
+route.put('/update-domain/:id', updateDomain)
+route.post('/delete-domain/:id', deleteDomain)
 
 export default route

@@ -3,6 +3,7 @@ import userAccount from '../model/userAccountSchema.js'
 import breakModel from '../model/breakSchema.js'
 import leaveRequestModel from '../model/LeaveRequestSchema.js'
 import specialRequestModel from '../model/specialRequestSchema.js'
+import domainModel from '../model/DomainSchema.js'
 import { generateToken } from '../utils/generateToken.js'
 import bcrypt from 'bcryptjs'
 import env from 'dotenv'
@@ -581,3 +582,138 @@ export const approveDenySpecialRequest = async (req, res) => {
         })
     }
 }
+
+// @route: POST /admin/add-domain
+// @purpose: post routes for admin to add domain
+export const addDomain = async (req, res) => {
+    const { domainName } = req.body
+    const domainExists = await domainModel.findOne({
+        domainName
+            : domainName
+    })
+    if (domainExists) {
+        res.status(400).json({
+            success: false,
+            message: "Domain with this name already exist!"
+        })
+    }
+    else {
+        const createDomain = await domainModel.create({
+            domainName
+        })
+        createDomain.save()
+        if (createDomain) {
+            res.json({
+                success: true,
+                _id: createDomain._id,
+                domainName: createDomain.domainName
+            })
+        } else {
+            res.status(404).json({
+                success: false,
+                message: "Invalid data!"
+            })
+        }
+    }
+
+}
+
+// @route: GET /admin/get-all-domains
+// @purpose: get routes for admin to get all domains
+export const getAllDomains = async (req, res) => {
+    const getAllDomains = await domainModel.find({})
+    if (getAllDomains) {
+        res.json({
+            success: true,
+            getAllDomains
+        })
+    }
+    else {
+        res.status(404).json({
+            success: false,
+            message: "No domain found!"
+        })
+    }
+}
+
+// @route: GET /admin/get-domain/:id
+// @purpose: get routes for admin to get domain by id
+export const getDomainById = async (req, res) => {
+    const id = req.params.id
+    const getDomainById = await domainModel.findById(id)
+    if (getDomainById) {
+        res.json({
+            success: true,
+            getDomainById
+        })
+    }
+    else {
+        res.status(404).json({
+            success: false,
+            message: "Domain not found!"
+        })
+    }
+}
+
+// @route: PUT /admin/update-domain/:id
+// @purpose: put routes for admin to update domain
+
+export const updateDomain = async (req, res) => {
+    const id = req.params.id
+    const { domainName } = req.body
+    const domainExists = await domain
+        .findOne({
+            domainName
+                : domainName
+        })
+
+    if (domainExists) {
+        res.status(400).json({
+            success: false,
+            message: "Domain with this name already exist!"
+        })
+    }
+    else {
+        const updateDomain = await domain
+            .findById(id)
+        if (updateDomain) {
+            updateDomain.domainName = domainName
+            updateDomain.save()
+            res.json({
+                success: true,
+                message: "Domain updated successfully!"
+            })
+        }
+
+        else {
+            res.status(404).json({
+                success: false,
+                message: "Domain not found!"
+            })
+        }
+
+    }
+}
+
+// @route: DELETE /admin/delete-domain/:id
+// @purpose: delete routes for admin to delete domain
+export const deleteDomain = async (req, res) => {
+    const id = req.params.id
+    const deleteDomain = await domainModel.findById
+        (id)
+    if (deleteDomain) {
+        await deleteDomain.remove()
+        res.json({
+            success: true,
+            message: "Domain deleted successfully!"
+        })
+    }
+    else {
+        res.status(404).json({
+            success: false,
+            message: "Domain not found!"
+        })
+    }
+
+}
+
