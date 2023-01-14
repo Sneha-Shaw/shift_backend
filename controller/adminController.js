@@ -277,7 +277,7 @@ export const updateDoctor = async (req, res) => {
         updateDoctor.dutyHoursPerDay = dutyHoursPerDay || updateDoctor.dutyHoursPerDay
         // check if updateDoctor.nughtDuty is equal to nighduty
         if (updateDoctor.nightDuty === nightDuty) {
-            updateDoctor.nightDuty =  updateDoctor.nightDuty
+            updateDoctor.nightDuty = updateDoctor.nightDuty
         }
         else {
             updateDoctor.nightDuty = nightDuty
@@ -285,7 +285,7 @@ export const updateDoctor = async (req, res) => {
         // check if domain is an array
         if (Array.isArray(domain)) {
             domain.forEach((element) => {
-            //   check if element is already in user details
+                //   check if element is already in user details
                 if (!updateDoctor.domain.includes(element)) {
                     updateDoctor.domain.push(element)
                 }
@@ -659,7 +659,7 @@ export const getDomainById = async (req, res) => {
 export const updateDomain = async (req, res) => {
     const id = req.params.id
     const { domainName } = req.body
-    const domainExists = await domain
+    const domainExists = await domainModel
         .findOne({
             domainName
                 : domainName
@@ -672,7 +672,7 @@ export const updateDomain = async (req, res) => {
         })
     }
     else {
-        const updateDomain = await domain
+        const updateDomain = await domainModel
             .findById(id)
         if (updateDomain) {
             updateDomain.domainName = domainName
