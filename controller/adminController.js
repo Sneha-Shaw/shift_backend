@@ -148,8 +148,7 @@ export const addDoctor = async (req, res) => {
         mobile,
         password,
         designation,
-        ecg,
-        echo,
+        domain,
         type,
         dutyHoursPerMonth,
         dutyHoursPerDay,
@@ -170,8 +169,7 @@ export const addDoctor = async (req, res) => {
             mobile,
             password,
             designation,
-            ecg,
-            echo,
+            domain,
             type,
             dutyHoursPerMonth,
             dutyHoursPerDay,
@@ -258,8 +256,7 @@ export const updateDoctor = async (req, res) => {
         email,
         mobile,
         designation,
-        ecg,
-        echo,
+        domain,
         type,
         dutyHoursPerMonth,
         dutyHoursPerDay,
@@ -285,20 +282,21 @@ export const updateDoctor = async (req, res) => {
         else {
             updateDoctor.nightDuty = nightDuty
         }
-        // check if updateDoctor.ecg is equal to ecg
-        if (updateDoctor.ecg === ecg) {
-            updateDoctor.ecg =  updateDoctor.ecg
+        // check if domain is an array
+        if (Array.isArray(domain)) {
+            domain.forEach((element) => {
+            //   check if element is already in user details
+                if (!updateDoctor.domain.includes(element)) {
+                    updateDoctor.domain.push(element)
+                }
+            })
         }
         else {
-            updateDoctor.ecg = ecg
+            if (!updateDoctor.domain.includes(domain)) {
+                updateDoctor.domain.push(domain)
+            }
         }
-        // check if updateDoctor.echo is equal to echo
-        if (updateDoctor.echo === echo) {
-            updateDoctor.echo =  updateDoctor.echo
-        }
-        else {
-            updateDoctor.echo = echo
-        }
+
         updateDoctor.save()
         res.status(200).json({
             success: true,

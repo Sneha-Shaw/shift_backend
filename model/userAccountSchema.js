@@ -35,13 +35,9 @@ const userAcSchema = new schema({
     designation: {
         type: String
     },
-    ecg: {
-        type: Boolean,
-        default: false
-    },
-    echo:{
-        type: Boolean,
-        default: false
+    domain :{
+        type: Array,
+        default: []
     },
     type: {
         type: String,

@@ -1,7 +1,7 @@
 POST http://localhost:5000/private/shift/generate-shift
 Content-Type: application/json
 
-{
+{   "domain":"ecg",
     "currentMonth": 0,
     "currentYear":2023
 }
