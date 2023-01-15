@@ -51,7 +51,7 @@ export const updateSlot = async (req, res) => {
                 // check if current date is already in allotment
                 var Present = false
                 for (let i = 0; i < getSlot.Allotment.length; i++) {
-                    if (getSlot.Allotment[i].day === Allotment[0].day) {
+                    if (getSlot.Allotment[i].date === Allotment[0].date) {
                         Present = true
                         break
                     }
@@ -63,16 +63,16 @@ export const updateSlot = async (req, res) => {
                             slotTime,
                             Allotment: {
                                 $elemMatch: {
-                                    day: Allotment[0].day
+                                    date: Allotment[0].date
                                 }
                             },
                         }, {
                             $set: {
                                 "Allotment.$.DoctorsNeeded": Allotment[0].DoctorsNeeded,
                                 "Allotment.$.SeniorNeeded": Allotment[0].SeniorNeeded,
-                                "Allotment.$.DoctorsAlloted": Allotment[0].DoctorsAlloted,
-                                "Allotment.$.SeniorAlloted": Allotment[0].SeniorAlloted,
-                                "Allotment.$.isFulfilled": Allotment[0].isFulfilled
+                                // "Allotment.$.DoctorsAlloted": Allotment[0].DoctorsAlloted,
+                                // "Allotment.$.SeniorAlloted": Allotment[0].SeniorAlloted,
+                                // "Allotment.$.isFulfilled": Allotment[0].isFulfilled
                             }
                         }, {
                             new: true
