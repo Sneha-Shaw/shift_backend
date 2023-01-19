@@ -139,7 +139,9 @@ export const deleteAvailability = async (req, res) => {
 // @purpose: : post routes for  user to delete availability by date
 export const deleteAvailabilityByDate = async (req, res) => {
     const { id,
-        date } = req.body
+        date,
+        start,
+        end } = req.body
     // check if user exists
     const checkUser = await userAccount
         .findById(id)
@@ -156,8 +158,9 @@ export const deleteAvailabilityByDate = async (req, res) => {
                 {
                     $pull: {
                         schedule: {
-                            date: date,
-
+                            date:date,
+                            start: start,
+                            end: end
                         }
                     }
                 },
