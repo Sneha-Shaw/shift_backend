@@ -32,35 +32,35 @@ export const addAvailability = async (req, res) => {
             })
         }
         else {
-
-            // add data in schedule
-            const saveAvailability = await availabilityScheduleModel
-                .findOneAndUpdate(
-                    { user: id },
-                    {
-                        //    get all elements from schedule then push in schedule
-                        $push: {
-                            schedule: {
-                                $each: schedule
+           
+                // add data in schedule
+                const saveAvailability = await availabilityScheduleModel
+                    .findOneAndUpdate(
+                        { user: id },
+                        {
+                            //    get all elements from schedule then push in schedule
+                            $push: {
+                                schedule: {
+                                    $each: schedule
+                                }
                             }
+                        },
+                        {
+                            new: true
                         }
-                    },
-                    {
-                        new: true
-                    }
-                )
+                    )
 
-            // save
-            await saveAvailability.save()
+                // save
+                await saveAvailability.save()
 
-            // send availability
-            res.status(200).json({
-                success: true,
-                message: "Availability added successfully!",
-                saveAvailability
-            })
-
-
+                // send availability
+                res.status(200).json({
+                    success: true,
+                    message: "Availability added successfully!",
+                    saveAvailability
+                })
+            
+           
         }
     }
 }
@@ -136,10 +136,12 @@ export const deleteAvailability = async (req, res) => {
 }
 
 // @route: POST /shift/delete-availability-by-date
-// @purpose: : post routes for  user to delete availability by date
+// @purpose: : post routes for  user to delete availability by date and time
 export const deleteAvailabilityByDate = async (req, res) => {
     const { id,
-        date } = req.body
+        date,
+        start,
+        end } = req.body
     // check if user exists
     const checkUser = await userAccount
         .findById(id)
@@ -156,8 +158,9 @@ export const deleteAvailabilityByDate = async (req, res) => {
                 {
                     $pull: {
                         schedule: {
-                            date: date,
-
+                            date:date,
+                            start: start,
+                            end: end
                         }
                     }
                 },
