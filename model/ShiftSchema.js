@@ -27,7 +27,7 @@ const shiftSchema = new schema({
     },
     shiftDay:{
         type: String,
-        required: true
+        // required: true
     },
     shiftTime:{
         type: String,

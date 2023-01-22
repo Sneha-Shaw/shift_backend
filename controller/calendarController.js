@@ -13,6 +13,7 @@ export const generateCalendar = async (req, res) => {
                 }
             }
         })
+        console.log(getCalendar);
         if (!getCalendar) {
             // get current year
             var currentYear = new Date().getFullYear()

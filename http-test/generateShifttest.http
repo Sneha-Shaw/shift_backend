@@ -2,8 +2,8 @@ POST http://localhost:5000/private/shift/generate-shift
 Content-Type: application/json
 
 {   "domain":"ecg",
-    "currentMonth": 0,
-    "currentYear":2023
+    "startDate": "2023-01-22",
+    "endDate": "2023-01-31"
 }
 
 ###
@@ -32,69 +32,6 @@ Content-Type: application/json
 }
 
 ###
-
-# update slot
-
-PUT  http://localhost:5000/private/shift/update-slot
-Content-Type: application/json
-
-{
-    "Allotment":[
-        {
-            "DoctorsNeeded": 2,
-            "SeniorNeeded": 0,
-            "day": "Sunday"
-        }
-    ],
-    "slotTime": "08:00 PM - 09:00 PM"
-}
-
-###
-# update slot
-
-PUT  http://localhost:5000/private/shift/update-slot
-Content-Type: application/json
-
-{
-    "Allotment":[
-        {
-            "DoctorsAlloted": 0,
-            "isFulfilled": false,
-            "day": "Wednesday"
-        }
-    ],
-    "slotTime": "07:00 PM - 08:00 PM"
-}
-
-###
-
-# update all slot
-
-PUT  http://localhost:5000/private/shift/update-all-slots
-Content-Type: application/json
-
-{
-    "Allotment":[
-        {
-            "DoctorsAlloted": 0,
-            "isFulfilled": false,
-            "day": "Wednesday"
-        }
-    ]
-}
-###
-# delete all shifts
-
-DELETE http://localhost:5000/private/shift/delete-all-shifts
-Content-Type: application/json
-
-###
-# get all slots
-
-GET http://localhost:5000/private/shift/get-all-slots
-Content-Type: application/json
-
-###
 # SHIFT REPLACMENT
 POST http://localhost:5000/private/shift/shift-replace
 Content-Type: application/json
@@ -112,42 +49,3 @@ Content-Type: application/json
 GET http://localhost:5000/private/shift/get-shift-replace-requests
 Content-Type: application/json
 ###
-# ADD AVAILABILITY
-POST http://localhost:5000/private/shift/add-availability
-Content-Type: application/json
-
-{
-    "id":"63b05d87afc00d82ddec2833",
-    "schedule":[
-    {
-    "date":"2023-01-05",
-    "start":"10:00 AM",
-    "end":"1:00 PM"
-    }
-    ]
-}
-
-###
-
-# GET AVAILABILITY
-GET http://localhost:5000/private/shift/63a95a79827a4f6c6af5823c/get-availability
-Content-Type: application/json
-###
-# GET ALL AVAILABILITY
-GET http://localhost:5000/private/shift/get-all-availability
-
-###
-# GET AVAILABILITY BY DATE
-GET http://localhost:5000/private/shift/get-availability-by-date?date=2023-01-07
-Content-Type: application/json
-
-###
-
-# DELETE AVAILABILITY BY DATE
-PUT http://localhost:5000/private/shift/delete-availability-by-date
-Content-Type: application/json
-
-{
-    "id":"63a95a79827a4f6c6af5823c",
-    "date":"2023-01-10"
-}

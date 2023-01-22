@@ -1,0 +1,39 @@
+# ADD AVAILABILITY
+POST http://localhost:5000/private/availability/add-availability
+Content-Type: application/json
+
+{
+    "id":"63aa9aaa793231a75de33fcd",
+    "schedule":[
+    {
+    "date":"2023-01-25",
+    "start":"4:00 PM",
+    "end":"8:00 PM"
+    }
+    ]
+}
+
+###
+
+# GET AVAILABILITY
+GET http://localhost:5000/private/availability/63a95a79827a4f6c6af5823c/get-availability
+Content-Type: application/json
+###
+# GET ALL AVAILABILITY
+GET http://localhost:5000/private/availability/get-all-availability
+
+###
+# GET AVAILABILITY BY DATE
+GET http://localhost:5000/private/availability/get-availability-by-date?date=2023-02-04
+Content-Type: application/json
+
+###
+
+# DELETE AVAILABILITY BY DATE
+PUT http://localhost:5000/private/availability/delete-availability-by-date
+Content-Type: application/json
+
+{
+    "id":"63a95a79827a4f6c6af5823c",
+    "date":"2023-01-10"
+}
