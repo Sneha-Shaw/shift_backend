@@ -85,7 +85,7 @@ export const generateShift = async (req, res) => {
 
 
                             if (getSlot[j].Allotment[getSlotArrayIndex].SeniorAlloted < getSlot[j].Allotment[getSlotArrayIndex].SeniorNeeded) {
-                               
+
                                 // check if dutyHoursAllotedPerMonth of current doctor<dutyHoursPerMonth
                                 if (getAllDoctor[k].dutyHoursAllotedPerMonth < getAllDoctor[k].dutyHoursPerMonth) {
                                     // // filter current date in AllotmentPerDay and get dutyHoursAlloted
@@ -97,7 +97,7 @@ export const generateShift = async (req, res) => {
                                         var getDoctorSchedule = await availabilityScheduleModel.findOne({
                                             user: doctorId
                                         })
-                                        
+
 
                                         // get current doctors schedule array 
                                         var getDoctorScheduleArrayDate = getDoctorSchedule?.schedule?.map((date) => date.date)
@@ -127,6 +127,7 @@ export const generateShift = async (req, res) => {
                                                         doctors: doctorId,
                                                         shiftDate: currentYear + '-' + (currentMonth + 1) + '-' + (i + 1),
                                                         shiftDay: currentDay,
+                                                        shiftDomain: domain,
                                                         shiftTime: currentSlot,
                                                         slot: getSlot[j]._id
                                                     })
@@ -134,7 +135,7 @@ export const generateShift = async (req, res) => {
                                                     await createShift.save()
 
                                                     // add 1 to DoctorsAlloted
-                                                    if (getSlot[j] && getSlot[j].Allotment[getSlotArrayIndex] && getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted!=undefined) {
+                                                    if (getSlot[j] && getSlot[j].Allotment[getSlotArrayIndex] && getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted != undefined) {
                                                         getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted = getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted + 1
                                                         getSlot[j].Allotment[getSlotArrayIndex].SeniorAlloted = getSlot[j].Allotment[getSlotArrayIndex].SeniorAlloted + 1
 
@@ -204,13 +205,14 @@ export const generateShift = async (req, res) => {
                                                             doctors: doctorId,
                                                             shiftDate: currentYear + '-' + (currentMonth + 1) + '-' + (i + 1),
                                                             shiftDay: currentDay,
+                                                            shiftDomain: domain,
                                                             shiftTime: currentSlot,
                                                             slot: getSlot[j]._id
                                                         })
 
                                                         await createShift.save()
                                                         // add 1 to DoctorsAlloted
-                                                        if (getSlot[j] && getSlot[j].Allotment[getSlotArrayIndex] && getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted!=undefined) {
+                                                        if (getSlot[j] && getSlot[j].Allotment[getSlotArrayIndex] && getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted != undefined) {
                                                             getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted = getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted + 1
                                                             getSlot[j].Allotment[getSlotArrayIndex].SeniorAlloted = getSlot[j].Allotment[getSlotArrayIndex].SeniorAlloted + 1
 
@@ -239,7 +241,7 @@ export const generateShift = async (req, res) => {
                             }
 
                             else {
-                              
+
                                 // filter current date in AllotmentPerDay and get dutyHoursAlloted
                                 // var dutyHoursAlloted = getAllDoctor[k].AllotmentPerDay.filter((date) => date.date === i + 1)
                                 // console.log(dutyHoursAlloted, 'dutyHoursAlloted');
@@ -250,7 +252,7 @@ export const generateShift = async (req, res) => {
                                         var getDoctorSchedule = await availabilityScheduleModel.findOne({
                                             user: doctorId
                                         })
-                                      
+
 
                                         // get current doctors schedule array 
                                         var getDoctorScheduleArrayDate = getDoctorSchedule?.schedule?.map((date) => date.date)
@@ -268,7 +270,7 @@ export const generateShift = async (req, res) => {
                                         // if current date is in getDoctorScheduleArrayDate and current month is ingetDoctorScheduleArrayMonthDate
                                         if (getDoctorScheduleArrayDayDate?.includes(i + 1) && getDoctorScheduleArrayMonthDate?.includes(currentMonth + 1) && getDoctorScheduleArrayYearDate?.includes(currentYear)) {
                                             console.log("current slot,junior");
-                                           
+
                                             // get current slot
                                             var currentSlot = getSlot[j].slotTime
                                             // check if currentSlot is night
@@ -278,12 +280,14 @@ export const generateShift = async (req, res) => {
                                                 // check if current doctor has opt for nightDuty
                                                 if (getAllDoctor[k].nightDuty === true) {
                                                     console.log("current doctor has opt for nightDuty");
+                                                    console.log(currentDate, 'currentDate');
 
                                                     var createShift = new ShiftModel({
                                                         // push doctorId in doctors array
                                                         doctors: doctorId,
                                                         shiftDate: currentYear + '-' + (currentMonth + 1) + '-' + (i + 1),
                                                         shiftDay: currentDay,
+                                                        shiftDomain: domain,
                                                         shiftTime: currentSlot,
                                                         slot: getSlot[j]._id
                                                     })
@@ -291,7 +295,7 @@ export const generateShift = async (req, res) => {
                                                     await createShift.save()
 
                                                     // add 1 to DoctorsAlloted
-                                                    if (getSlot[j] && getSlot[j].Allotment[getSlotArrayIndex] && getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted!=undefined) {
+                                                    if (getSlot[j] && getSlot[j].Allotment[getSlotArrayIndex] && getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted != undefined) {
                                                         getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted = getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted + 1
                                                     }
                                                     await getSlot[j].save()
@@ -349,12 +353,14 @@ export const generateShift = async (req, res) => {
                                                 if (currentSlotStartTime >= currentDoctorScheduleStartTime) {
                                                     // check if currentSlotEndTime is less than currentDoctorScheduleEndTime
                                                     if (currentSlotEndTime <= currentDoctorScheduleEndTime) {
+                                                        console.log(currentDate, 'currentDate');
 
                                                         var createShift = new ShiftModel({
                                                             // push doctorId in doctors array
                                                             doctors: doctorId,
                                                             shiftDate: currentYear + '-' + (currentMonth + 1) + '-' + (i + 1),
                                                             shiftDay: currentDay,
+                                                            shiftDomain: domain,
                                                             shiftTime: currentSlot,
                                                             slot: getSlot[j]._id
                                                         })
@@ -363,7 +369,7 @@ export const generateShift = async (req, res) => {
                                                         // filter currentday in getSLot[j] and add 1 to DoctorsAlloted
                                                         var getSlotArray = getSlot[j]?.Allotment?.filter((day) => day.day === currentDay)
                                                         var getSlotArrayIndex = getSlot[j]?.Allotment?.indexOf(getSlotArray[0])
-                                                        if (getSlot[j] && getSlot[j].Allotment[getSlotArrayIndex] && getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted!=undefined) {
+                                                        if (getSlot[j] && getSlot[j].Allotment[getSlotArrayIndex] && getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted != undefined) {
                                                             getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted = getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted + 1
                                                         }
                                                         await getSlot[j].save()

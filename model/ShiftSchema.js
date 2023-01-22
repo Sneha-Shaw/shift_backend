@@ -33,6 +33,10 @@ const shiftSchema = new schema({
         type: String,
         required: true
     },
+    shiftDomain:{
+        type: String,
+        required: true
+    },
     doctors:[
         {
             type: mongoose.Schema.Types.ObjectId,
