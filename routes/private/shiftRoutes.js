@@ -5,6 +5,7 @@ import {
     getShifts,
     getShiftsByDate,
     getShiftsByDoctor,
+    getShiftsByDomain,
     updateShift,
     approveOrDecline,
     deleteShiftByDate,
@@ -23,6 +24,7 @@ route.post('/create-shift', createShift);
 route.get('/get-shifts', getShifts);
 route.get('/get-shifts-by-date', getShiftsByDate);
 route.get('/get-shifts-by-doctor', getShiftsByDoctor);
+route.get('/get-shifts-by-domain', getShiftsByDomain);
 
 route.put('/update-shift', updateShift);
 route.put('/approve-or-decline', approveOrDecline);

@@ -447,6 +447,22 @@ export const getShifts = async (req, res) => {
     }
 }
 
+
+// @route: GET /shift/get-shifts-by-domain
+// @purpose: : get routes to get all shifts by shiftDomain
+export const getShiftsByDomain = async (req, res) => {
+    const { domain } = req.query
+    try {
+        var getShifts = await ShiftModel.find({
+            shiftDomain: domain
+        })
+        res.status(200).json({ message: 'All shifts', data: getShifts })
+    }
+    catch (err) {
+        res.status(400).json({ message: err.message })
+    }
+}
+
 // @route: GET /shift/get-shifts-by-date
 // @purpose: : get routes to get all shifts by date
 export const getShiftsByDate = async (req, res) => {
