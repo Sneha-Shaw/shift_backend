@@ -417,15 +417,15 @@ export const generateShift = async (req, res) => {
 // @route: POST /shift/create-shift
 // @purpose: : post routes to create shift
 export const createShift = async (req, res) => {
-    const { doctors, shiftStartDate, shiftEndDate, shiftStartTime, shiftEndTime, slot } = req.body
+    const { doctors, shiftDate, shiftDay, shiftTime, shiftDomain, slotId } = req.body
     try {
         var newShift = new ShiftModel({
             doctors,
-            shiftStartDate,
-            shiftEndDate,
-            shiftStartTime,
-            shiftEndTime,
-            slot
+            shiftDate,
+            shiftDay,
+            shiftTime,
+            shiftDomain,
+            slot: slotId
         })
         await newShift.save()
         res.status(200).json({ message: 'Shift created' })
@@ -494,18 +494,14 @@ export const getShiftsByDoctor = async (req, res) => {
     }
 }
 
-// @route: PUT /shift/update-shift
+// @route: PUT /shift/update-shift/:id
 // @purpose: : put routes to update shift
 export const updateShift = async (req, res) => {
-    const { doctors, shiftStartDate, shiftEndDate, shiftStartTime, shiftEndTime, slot } = req.body
+    const { doctors } = req.body
+    // const id
+    const id = req.params.id
     try {
-        var getShift = await ShiftModel.findOne({
-            shiftStartDate: shiftStartDate,
-            shiftEndDate: shiftEndDate,
-            shiftStartTime: shiftStartTime,
-            shiftEndTime: shiftEndTime,
-            slot: slot
-        })
+        var getShift = await ShiftModel.findById(id)
         if (getShift === null) {
             res.status(400).json({ message: 'Shift not found' })
         }

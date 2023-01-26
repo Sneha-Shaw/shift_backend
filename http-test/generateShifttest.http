@@ -52,3 +52,25 @@ Content-Type: application/json
 GET http://localhost:5000/private/shift/get-shift-replace-requests
 Content-Type: application/json
 ###
+
+# UPDATE SHIFT
+PUT http://localhost:5000/private/shift/update-shift/63ceaf6774df67649df7eb55
+Content-Type: application/json
+
+{
+    "doctors":[ "63a95a79827a4f6c6af5823c","63a9ad9ec4ccdb71c8b3ced9","63aa9aaa793231a75de33fcd"]
+}
+
+###
+# CREATE SHIFT
+POST http://localhost:5000/private/shift/create-shift
+Content-Type: application/json
+
+{
+    "doctors":[ "63b15b0cf6343140d174e29e","63b15a043727fad53543b77e","63aa9aaa793231a75de33fcd"],
+    "shiftDate": "2023-01-02",
+    "shiftDay": "Monday",
+    "shiftTime": "10:00 AM - 11:00 AM",
+    "shiftDomain": "echo",
+    "slotId": "63ad32897c917d598f58dc6a"
+}

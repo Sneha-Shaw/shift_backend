@@ -17,37 +17,37 @@ const shiftSchema = new schema({
         type: Number,
         default: 1
     },
-    shiftDate:{
+    shiftDate: {
         type: String,
         required: true
     },
-    shiftBreaks:{
+    shiftBreaks: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Break"
     },
-    shiftDay:{
+    shiftDay: {
         type: String,
         // required: true
     },
-    shiftTime:{
+    shiftTime: {
         type: String,
         required: true
     },
-    shiftDomain:{
+    shiftDomain: {
         type: String,
         required: true
     },
-    doctors:[
+    doctors: [
         {
             type: mongoose.Schema.Types.ObjectId,
             ref: "UserAccount"
         }
     ],
-    slot:{
+    slot: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Slot"
     },
-    shiftStatus:{
+    shiftStatus: {
         type: String,
         default: "Awaiting",
         enum: ["Approved", "Awaiting", "Declined"]

@@ -26,7 +26,7 @@ route.get('/get-shifts-by-date', getShiftsByDate);
 route.get('/get-shifts-by-doctor', getShiftsByDoctor);
 route.get('/get-shifts-by-domain', getShiftsByDomain);
 
-route.put('/update-shift', updateShift);
+route.put('/update-shift/:id', updateShift);
 route.put('/approve-or-decline', approveOrDecline);
 
 route.delete('/delete-shift-by-date', deleteShiftByDate);
