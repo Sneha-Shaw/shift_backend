@@ -8,7 +8,7 @@ import {
     getShiftsByDomain,
     updateShift,
     approveOrDecline,
-    deleteShiftByDate,
+    deleteShift,
     deleteAllShifts,
     ShiftReplace,
     getShiftReplaceRequests
@@ -29,8 +29,7 @@ route.get('/get-shifts-by-domain', getShiftsByDomain);
 route.put('/update-shift/:id', updateShift);
 route.put('/approve-or-decline', approveOrDecline);
 
-route.delete('/delete-shift-by-date', deleteShiftByDate);
-route.delete('/delete-all-shifts', deleteAllShifts);
+route.delete('/delete-shift/:id', deleteShift);
 route.delete('/delete-all-shifts', deleteAllShifts);
 
 // shift replace

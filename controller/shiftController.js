@@ -419,16 +419,27 @@ export const generateShift = async (req, res) => {
 export const createShift = async (req, res) => {
     const { doctors, shiftDate, shiftDay, shiftTime, shiftDomain, slotId } = req.body
     try {
-        var newShift = new ShiftModel({
-            doctors,
-            shiftDate,
-            shiftDay,
-            shiftTime,
-            shiftDomain,
-            slot: slotId
+        //check if shift is already present then dont create
+        var checkShift= await ShiftModel.findOne({
+            shiftDate: shiftDate,
+            shiftTime: shiftTime,
+            shiftDomain: shiftDomain
         })
-        await newShift.save()
-        res.status(200).json({ message: 'Shift created' })
+        if(checkShift){
+            res.status(400).json({ message: 'Shift already present' })
+        }
+        else{
+            var createShift = new ShiftModel({
+                doctors: doctors,
+                shiftDate: shiftDate,
+                shiftDay: shiftDay,
+                shiftTime: shiftTime,
+                shiftDomain: shiftDomain,
+                slot: slotId
+            })
+            await createShift.save()
+            res.status(200).json({ message: 'Shift created', data: createShift })
+        }
     }
     catch (err) {
         res.status(400).json({ message: err.message })
@@ -542,17 +553,13 @@ export const approveOrDecline = async (req, res) => {
     }
 }
 
-// @route: DELETE /shift/delete-shift-by-time
+// @route: DELETE /shift/delete-shift
 // @purpose: : delete routes to delete shift by date
-export const deleteShiftByDate = async (req, res) => {
-    const { shiftStartDate, shiftEndDate, shiftStartTime, shiftEndTime } = req.body
+export const deleteShift = async (req, res) => {
+    const id = req.params.id
     try {
-        var getShift = await ShiftModel.findOne({
-            shiftStartDate: shiftStartDate,
-            shiftEndDate: shiftEndDate,
-            shiftStartTime: shiftStartTime,
-            shiftEndTime: shiftEndTime
-        })
+        var getShift = await ShiftModel.findById(id)
+        
         if (getShift === null) {
             res.status(400).json({ message: 'Shift not found' })
         }

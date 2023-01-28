@@ -74,3 +74,8 @@ Content-Type: application/json
     "shiftDomain": "echo",
     "slotId": "63ad32897c917d598f58dc6a"
 }
+
+###
+# DELETE SHIFT
+DELETE http://localhost:5000/private/shift/delete-shift/63d344c6ee24eda29689c032
+Content-Type: application/json
