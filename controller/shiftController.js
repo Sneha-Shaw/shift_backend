@@ -6,16 +6,17 @@ import availabilityScheduleModel from '../model/AvailabilityScheduleSchema.js'
 import shiftReplaceModel from '../model/ShiftReplaceSchema.js'
 import isEmpty from '../utils/isEmpty.js'
 import moment from "moment/moment.js";
+import {rosterGenerationScheduler} from '../utils/scheduler/rosterGenerationScheduler.js'
 
 import env from 'dotenv'
 
 env.config()
-
+rosterGenerationScheduler()
 //@route: POST /shift/generate-shift
 //@purpose: : post routes to generate shift of a month with respective days by checking in doctors schedule and available slot time
 export const generateShift = async (req, res) => {
     const { domain, startDate, endDate } = req.body
-
+console.log(startDate, endDate,domain);
     try {
 
         // get date from start Date which is in format YYYY-MM-DD

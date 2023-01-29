@@ -6,7 +6,7 @@ Content-Type: application/json
     "id":"63aa9aaa793231a75de33fcd",
     "schedule":[
     {
-    "date":"2023-01-25",
+    "date":"2023-02-02",
     "start":"4:00 PM",
     "end":"8:00 PM"
     }
@@ -24,7 +24,7 @@ GET http://localhost:5000/private/availability/get-all-availability
 
 ###
 # GET AVAILABILITY BY DATE
-GET http://localhost:5000/private/availability/get-availability-by-date?date=2023-02-04
+GET http://localhost:5000/private/availability/get-availability-by-date?date=2023-02-02
 Content-Type: application/json
 
 ###
