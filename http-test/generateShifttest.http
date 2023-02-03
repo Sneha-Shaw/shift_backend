@@ -2,8 +2,8 @@ POST http://localhost:5000/private/shift/generate-shift
 Content-Type: application/json
 
 {   "domain":"echo",
-    "startDate": "2023-01-22",
-    "endDate": "2023-01-31"
+    "startDate": "2023-02-01",
+    "endDate": "2023-02-27"
 }
 
 ###

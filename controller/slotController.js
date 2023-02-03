@@ -143,7 +143,7 @@ export const updateAllSlot = async (req, res) => {
                 {
                     Allotment: {
                         $elemMatch: {
-                            day: Allotment[0].day
+                            date: Allotment[0].date
                         }
                     }
                 },

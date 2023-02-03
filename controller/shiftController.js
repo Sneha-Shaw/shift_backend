@@ -6,17 +6,18 @@ import availabilityScheduleModel from '../model/AvailabilityScheduleSchema.js'
 import shiftReplaceModel from '../model/ShiftReplaceSchema.js'
 import isEmpty from '../utils/isEmpty.js'
 import moment from "moment/moment.js";
-import {rosterGenerationScheduler} from '../utils/scheduler/rosterGenerationScheduler.js'
+import { rosterGenerationScheduler } from '../utils/scheduler/rosterGenerationScheduler.js'
 
 import env from 'dotenv'
 
 env.config()
+// calling roster Generation Scheduler to schedule shift generation
 rosterGenerationScheduler()
 //@route: POST /shift/generate-shift
 //@purpose: : post routes to generate shift of a month with respective days by checking in doctors schedule and available slot time
 export const generateShift = async (req, res) => {
     const { domain, startDate, endDate } = req.body
-console.log(startDate, endDate,domain);
+    console.log(startDate, endDate, domain);
     try {
 
         // get date from start Date which is in format YYYY-MM-DD
@@ -124,37 +125,47 @@ console.log(startDate, endDate,domain);
                                                 if (getAllDoctor[k].nightDuty === true) {
                                                     console.log(currentDate, 'currentDate');
 
-                                                    var createShift = new ShiftModel({
-                                                        doctors: doctorId,
-                                                        shiftDate: currentYear + '-' + (currentMonth + 1) + '-' + (i + 1),
-                                                        shiftDay: currentDay,
+                                                    // check if shift is already in database
+                                                    var checkShift = await ShiftModel.findOne({
+                                                        // doctors: doctorId,
+                                                        shiftDate: currentDate,
                                                         shiftDomain: domain,
-                                                        shiftTime: currentSlot,
-                                                        slot: getSlot[j]._id
+                                                        shiftTime: currentSlot
                                                     })
 
-                                                    await createShift.save()
+                                                    // if shift is not in database then create shift
+                                                    if (!checkShift) {
 
-                                                    // add 1 to DoctorsAlloted
-                                                    if (getSlot[j] && getSlot[j].Allotment[getSlotArrayIndex] && getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted != undefined) {
-                                                        getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted = getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted + 1
-                                                        getSlot[j].Allotment[getSlotArrayIndex].SeniorAlloted = getSlot[j].Allotment[getSlotArrayIndex].SeniorAlloted + 1
+                                                        var createShift = new ShiftModel({
+                                                            doctors: doctorId,
+                                                            shiftDate: currentYear + '-' + (currentMonth + 1) + '-' + (i + 1),
+                                                            shiftDay: currentDay,
+                                                            shiftDomain: domain,
+                                                            shiftTime: currentSlot,
+                                                            slot: getSlot[j]._id
+                                                        })
 
+                                                        await createShift.save()
+
+                                                        // add 1 to DoctorsAlloted
+                                                        if (getSlot[j] && getSlot[j].Allotment[getSlotArrayIndex] && getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted != undefined) {
+                                                            getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted = getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted + 1
+                                                            getSlot[j].Allotment[getSlotArrayIndex].SeniorAlloted = getSlot[j].Allotment[getSlotArrayIndex].SeniorAlloted + 1
+
+                                                        }
+                                                        await getSlot[j].save()
+
+                                                        // if getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted===getSlot[j].Allotment[getSlotArrayIndex].DoctorsNeeded
+                                                        // if (getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted === getSlot[j].Allotment[getSlotArrayIndex].DoctorsNeeded) {
+                                                        //     getSlot[j].Allotment[getSlotArrayIndex].isFulfilled = true
+                                                        //     await getSlot[j].save()
+
+                                                        // }
+
+                                                        // add 1 to getAllDoctor[k].dutyHoursAllotedPerMonth
+                                                        getAllDoctor[k].dutyHoursAllotedPerMonth = getAllDoctor[k].dutyHoursAllotedPerMonth + 1
+                                                        await getAllDoctor[k].save()
                                                     }
-                                                    await getSlot[j].save()
-
-                                                    // if getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted===getSlot[j].Allotment[getSlotArrayIndex].DoctorsNeeded
-                                                    // if (getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted === getSlot[j].Allotment[getSlotArrayIndex].DoctorsNeeded) {
-                                                    //     getSlot[j].Allotment[getSlotArrayIndex].isFulfilled = true
-                                                    //     await getSlot[j].save()
-
-                                                    // }
-
-                                                    // add 1 to getAllDoctor[k].dutyHoursAllotedPerMonth
-                                                    getAllDoctor[k].dutyHoursAllotedPerMonth = getAllDoctor[k].dutyHoursAllotedPerMonth + 1
-                                                    await getAllDoctor[k].save()
-
-
 
                                                 }
                                             }
@@ -201,34 +212,48 @@ console.log(startDate, endDate,domain);
                                                     if (currentSlotEndTime <= currentDoctorScheduleEndTime) {
                                                         console.log(currentDate, 'currentDate');
 
-                                                        var createShift = new ShiftModel({
-                                                            // push doctorId in doctors array
-                                                            doctors: doctorId,
-                                                            shiftDate: currentYear + '-' + (currentMonth + 1) + '-' + (i + 1),
-                                                            shiftDay: currentDay,
+                                                        // check if shift is already in database
+                                                        var checkShift = await ShiftModel.findOne({
+                                                            // doctors: doctorId,
+                                                            shiftDate: currentDate,
                                                             shiftDomain: domain,
-                                                            shiftTime: currentSlot,
-                                                            slot: getSlot[j]._id
+                                                            shiftTime: currentSlot
                                                         })
 
-                                                        await createShift.save()
-                                                        // add 1 to DoctorsAlloted
-                                                        if (getSlot[j] && getSlot[j].Allotment[getSlotArrayIndex] && getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted != undefined) {
-                                                            getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted = getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted + 1
-                                                            getSlot[j].Allotment[getSlotArrayIndex].SeniorAlloted = getSlot[j].Allotment[getSlotArrayIndex].SeniorAlloted + 1
+                                                        // if shift is not in database then create shift
+                                                        if (!checkShift) {
 
+                                                            var createShift = new ShiftModel({
+                                                                doctors: doctorId,
+                                                                shiftDate: currentYear + '-' + (currentMonth + 1) + '-' + (i + 1),
+                                                                shiftDay: currentDay,
+                                                                shiftDomain: domain,
+                                                                shiftTime: currentSlot,
+                                                                slot: getSlot[j]._id
+                                                            })
+
+                                                            await createShift.save()
+
+                                                            // add 1 to DoctorsAlloted
+                                                            if (getSlot[j] && getSlot[j].Allotment[getSlotArrayIndex] && getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted != undefined) {
+                                                                getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted = getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted + 1
+                                                                getSlot[j].Allotment[getSlotArrayIndex].SeniorAlloted = getSlot[j].Allotment[getSlotArrayIndex].SeniorAlloted + 1
+
+                                                            }
+                                                            await getSlot[j].save()
+
+                                                            // if getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted===getSlot[j].Allotment[getSlotArrayIndex].DoctorsNeeded
+                                                            // if (getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted === getSlot[j].Allotment[getSlotArrayIndex].DoctorsNeeded) {
+                                                            //     getSlot[j].Allotment[getSlotArrayIndex].isFulfilled = true
+                                                            //     await getSlot[j].save()
+
+                                                            // }
+
+                                                            // add 1 to getAllDoctor[k].dutyHoursAllotedPerMonth
+                                                            getAllDoctor[k].dutyHoursAllotedPerMonth = getAllDoctor[k].dutyHoursAllotedPerMonth + 1
+                                                            await getAllDoctor[k].save()
                                                         }
-                                                        await getSlot[j].save()
 
-                                                        // if getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted===getSlot[j].Allotment[getSlotArrayIndex].DoctorsNeeded
-                                                        // if (getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted === getSlot[j].Allotment[getSlotArrayIndex].DoctorsNeeded) {
-                                                        //     getSlot[j].Allotment[getSlotArrayIndex].isFulfilled = true
-                                                        //     await getSlot[j].save()
-
-                                                        // }
-                                                        // add 1 to getAllDoctor[k].dutyHoursAllotedPerMonth
-                                                        getAllDoctor[k].dutyHoursAllotedPerMonth = getAllDoctor[k].dutyHoursAllotedPerMonth + 1
-                                                        await getAllDoctor[k].save()
 
                                                     }
                                                 }
@@ -282,34 +307,48 @@ console.log(startDate, endDate,domain);
                                                 if (getAllDoctor[k].nightDuty === true) {
                                                     console.log("current doctor has opt for nightDuty");
                                                     console.log(currentDate, 'currentDate');
-
-                                                    var createShift = new ShiftModel({
-                                                        // push doctorId in doctors array
-                                                        doctors: doctorId,
-                                                        shiftDate: currentYear + '-' + (currentMonth + 1) + '-' + (i + 1),
-                                                        shiftDay: currentDay,
+                                                    // check if shift is already in database
+                                                    var checkShift = await ShiftModel.findOne({
+                                                        // doctors: doctorId,
+                                                        shiftDate: currentDate,
                                                         shiftDomain: domain,
-                                                        shiftTime: currentSlot,
-                                                        slot: getSlot[j]._id
+                                                        shiftTime: currentSlot
                                                     })
 
-                                                    await createShift.save()
+                                                    // if shift is not in database then create shift
+                                                    if (!checkShift) {
 
-                                                    // add 1 to DoctorsAlloted
-                                                    if (getSlot[j] && getSlot[j].Allotment[getSlotArrayIndex] && getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted != undefined) {
-                                                        getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted = getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted + 1
+                                                        var createShift = new ShiftModel({
+                                                            doctors: doctorId,
+                                                            shiftDate: currentYear + '-' + (currentMonth + 1) + '-' + (i + 1),
+                                                            shiftDay: currentDay,
+                                                            shiftDomain: domain,
+                                                            shiftTime: currentSlot,
+                                                            slot: getSlot[j]._id
+                                                        })
+
+                                                        await createShift.save()
+
+                                                        // add 1 to DoctorsAlloted
+                                                        if (getSlot[j] && getSlot[j].Allotment[getSlotArrayIndex] && getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted != undefined) {
+                                                            getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted = getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted + 1
+                                                            getSlot[j].Allotment[getSlotArrayIndex].SeniorAlloted = getSlot[j].Allotment[getSlotArrayIndex].SeniorAlloted + 1
+
+                                                        }
+                                                        await getSlot[j].save()
+
+                                                        // if getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted===getSlot[j].Allotment[getSlotArrayIndex].DoctorsNeeded
+                                                        // if (getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted === getSlot[j].Allotment[getSlotArrayIndex].DoctorsNeeded) {
+                                                        //     getSlot[j].Allotment[getSlotArrayIndex].isFulfilled = true
+                                                        //     await getSlot[j].save()
+
+                                                        // }
+
+                                                        // add 1 to getAllDoctor[k].dutyHoursAllotedPerMonth
+                                                        getAllDoctor[k].dutyHoursAllotedPerMonth = getAllDoctor[k].dutyHoursAllotedPerMonth + 1
+                                                        await getAllDoctor[k].save()
                                                     }
-                                                    await getSlot[j].save()
 
-                                                    // if getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted===getSlot[j].Allotment[getSlotArrayIndex].DoctorsNeeded
-                                                    // if (getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted === getSlot[j].Allotment[getSlotArrayIndex].DoctorsNeeded) {
-                                                    //     getSlot[j].Allotment[getSlotArrayIndex].isFulfilled = true
-                                                    //     await getSlot[j].save()
-
-                                                    // }
-                                                    // add 1 to getAllDoctor[k].dutyHoursAllotedPerMonth
-                                                    getAllDoctor[k].dutyHoursAllotedPerMonth = getAllDoctor[k].dutyHoursAllotedPerMonth + 1
-                                                    await getAllDoctor[k].save()
 
                                                 }
                                             }
@@ -356,34 +395,48 @@ console.log(startDate, endDate,domain);
                                                     if (currentSlotEndTime <= currentDoctorScheduleEndTime) {
                                                         console.log(currentDate, 'currentDate');
 
-                                                        var createShift = new ShiftModel({
-                                                            // push doctorId in doctors array
-                                                            doctors: doctorId,
-                                                            shiftDate: currentYear + '-' + (currentMonth + 1) + '-' + (i + 1),
-                                                            shiftDay: currentDay,
+                                                        // check if shift is already in database
+                                                        var checkShift = await ShiftModel.findOne({
+                                                            // doctors: doctorId,
+                                                            shiftDate: currentDate,
                                                             shiftDomain: domain,
-                                                            shiftTime: currentSlot,
-                                                            slot: getSlot[j]._id
+                                                            shiftTime: currentSlot
                                                         })
 
-                                                        await createShift.save()
-                                                        // filter currentday in getSLot[j] and add 1 to DoctorsAlloted
-                                                        var getSlotArray = getSlot[j]?.Allotment?.filter((day) => day.day === currentDay)
-                                                        var getSlotArrayIndex = getSlot[j]?.Allotment?.indexOf(getSlotArray[0])
-                                                        if (getSlot[j] && getSlot[j].Allotment[getSlotArrayIndex] && getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted != undefined) {
-                                                            getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted = getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted + 1
+                                                        // if shift is not in database then create shift
+                                                        if (!checkShift) {
+
+                                                            var createShift = new ShiftModel({
+                                                                doctors: doctorId,
+                                                                shiftDate: currentYear + '-' + (currentMonth + 1) + '-' + (i + 1),
+                                                                shiftDay: currentDay,
+                                                                shiftDomain: domain,
+                                                                shiftTime: currentSlot,
+                                                                slot: getSlot[j]._id
+                                                            })
+
+                                                            await createShift.save()
+
+                                                            // add 1 to DoctorsAlloted
+                                                            if (getSlot[j] && getSlot[j].Allotment[getSlotArrayIndex] && getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted != undefined) {
+                                                                getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted = getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted + 1
+                                                                getSlot[j].Allotment[getSlotArrayIndex].SeniorAlloted = getSlot[j].Allotment[getSlotArrayIndex].SeniorAlloted + 1
+
+                                                            }
+                                                            await getSlot[j].save()
+
+                                                            // if getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted===getSlot[j].Allotment[getSlotArrayIndex].DoctorsNeeded
+                                                            // if (getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted === getSlot[j].Allotment[getSlotArrayIndex].DoctorsNeeded) {
+                                                            //     getSlot[j].Allotment[getSlotArrayIndex].isFulfilled = true
+                                                            //     await getSlot[j].save()
+
+                                                            // }
+
+                                                            // add 1 to getAllDoctor[k].dutyHoursAllotedPerMonth
+                                                            getAllDoctor[k].dutyHoursAllotedPerMonth = getAllDoctor[k].dutyHoursAllotedPerMonth + 1
+                                                            await getAllDoctor[k].save()
                                                         }
-                                                        await getSlot[j].save()
 
-                                                        // if getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted===getSlot[j].Allotment[getSlotArrayIndex].DoctorsNeeded
-                                                        // if (getSlot[j].Allotment[getSlotArrayIndex].DoctorsAlloted === getSlot[j].Allotment[getSlotArrayIndex].DoctorsNeeded) {
-                                                        //     getSlot[j].Allotment[getSlotArrayIndex].isFulfilled = true
-                                                        //     await getSlot[j].save()
-
-                                                        // }
-                                                        // add 1 to getAllDoctor[k].dutyHoursAllotedPerMonth
-                                                        getAllDoctor[k].dutyHoursAllotedPerMonth = getAllDoctor[k].dutyHoursAllotedPerMonth + 1
-                                                        await getAllDoctor[k].save()
 
                                                     }
                                                 }
@@ -421,15 +474,15 @@ export const createShift = async (req, res) => {
     const { doctors, shiftDate, shiftDay, shiftTime, shiftDomain, slotId } = req.body
     try {
         //check if shift is already present then dont create
-        var checkShift= await ShiftModel.findOne({
-            shiftDate: shiftDate,
+        var checkShift = await ShiftModel.findOne({
+            // shiftDate: shiftDate,
             shiftTime: shiftTime,
             shiftDomain: shiftDomain
         })
-        if(checkShift){
+        if (checkShift) {
             res.status(400).json({ message: 'Shift already present' })
         }
-        else{
+        else {
             var createShift = new ShiftModel({
                 doctors: doctors,
                 shiftDate: shiftDate,
@@ -560,7 +613,7 @@ export const deleteShift = async (req, res) => {
     const id = req.params.id
     try {
         var getShift = await ShiftModel.findById(id)
-        
+
         if (getShift === null) {
             res.status(400).json({ message: 'Shift not found' })
         }
