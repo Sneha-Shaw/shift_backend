@@ -59,3 +59,13 @@ Content-Type: application/json
 
 GET http://localhost:5000/private/slot/get-all-slots
 Content-Type: application/json
+
+###
+# replace date
+PUT http://localhost:5000/private/slot/replace-date
+Content-Type: application/json
+
+{
+    "oldDate": "2023-02-04",
+    "newDate": "04"
+}

@@ -193,3 +193,43 @@ export const getAllSlots = async (req, res) => {
         res.status(400).json({ message: err.message })
     }
 }
+
+// @route: /shift/replace-date
+// @purpose: : get routes to replace date
+export const replaceDate = async (req, res) => {
+    const {
+        // slotTime,
+        oldDate,
+        newDate
+    } = req.body
+    try {
+        // find by date and update doctorNeeded
+        var getSlotUpdate = await SlotModel
+            .findOneAndUpdate({
+                // slotTime,
+                Allotment: {
+                    $elemMatch: {
+                        date: oldDate
+                    }
+                },
+            }, {
+                $set: {
+                    "Allotment.$.date": newDate
+                }
+            }, {
+                new: true
+            })
+
+        // save
+        var saveSlot = await getSlotUpdate.save()
+        // send slot
+        res.status(200).json({
+            success: true,
+            message: "Slot updated successfully!",
+            saveSlot
+        })
+    }
+    catch (err) {
+        res.status(400).json({ message: err.message })
+    }
+}

@@ -5,7 +5,7 @@ import {
     getAllAvailability,
     deleteAvailability,
     getAvailabilityByDate,
-    deleteAvailabilityByDate
+    deleteAvailabilityById
 } from '../../controller/availabilityController.js'
 
 const route = express.Router()
@@ -21,8 +21,8 @@ route.get('/get-all-availability', getAllAvailability)
 route.post('/delete-availability', deleteAvailability)
 // get availability by date
 route.get('/get-availability-by-date', getAvailabilityByDate)
-// delete availability by date
-route.put('/delete-availability-by-date', deleteAvailabilityByDate)
+// delete availability by id
+route.post('/delete-availability-by-id/:id', deleteAvailabilityById)
 
 
 export default route
