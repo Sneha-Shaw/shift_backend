@@ -111,9 +111,9 @@ export const getAllAvailability = async (req, res) => {
     }
 }
 
-//@route: DELETE /shift/delete-availability
+//@route: DELETE /shift/delete-availability-by-user
 //@purpose: : post routes for  user to delete availability
-export const deleteAvailability = async (req, res) => {
+export const deleteAvailabilityByUser = async (req, res) => {
     const { id } = req.body
     // check if user exists
     const checkUser = await userAccount
@@ -135,16 +135,42 @@ export const deleteAvailability = async (req, res) => {
     }
 }
 
-// @route: DELETE /shift/delete-availability-by-id
-// @purpose: : delete routes for  user to delete availability by id
-export const deleteAvailabilityById = async (req, res) => {
-    const id = req.params.id
-    const deleteAvailabilityById = await availabilityScheduleModel
-        .findByIdAndDelete(id)
-    res.json({
-        success: true,
-        message: "Availability deleted successfully!",
-        deleteAvailabilityById
-    })
+// @route: DELETE /shift/delete-availability-by-date
+// @purpose: : delete routes for  user to delete availability by date
+export const deleteAvailabilityByDate = async (req, res) => {
+    const { id, date,start,end } = req.body
+    // check if user exists
+    const checkUser = await userAccount
+        .findById(id)
+    if (isEmpty(checkUser)) {
+        res.status(404).json({
+            success: false,
+            message: "User not found!"
+        })
+    }
+    else {
+        const deleteAvailability = await availabilityScheduleModel
+            .findOneAndUpdate(
+                { user: id },
+                {
+                    //    get all elements from schedule then push in schedule
+                    $pull: {
+                        schedule: {
+                            date: date,
+                            start: start,
+                            end: end
+                        }
+                    }
+                },
+                {
+                    new: true
+                }
+            )
+        res.json({
+            success: true,
+            message: "Availability deleted successfully!",
+            deleteAvailability
+        })
+    }
 }
 
