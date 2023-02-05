@@ -528,15 +528,19 @@ export const getShiftsByDomain = async (req, res) => {
     }
 }
 
-// @route: GET /shift/get-shifts-by-date
+// @route: GET /shift/get-shifts-by-month
 // @purpose: : get routes to get all shifts by date
-export const getShiftsByDate = async (req, res) => {
-    const { shiftStartDate, shiftEndDate } = req.body
+export const getShiftsByMonth = async (req, res) => {
+    const { month,year, domain } = req.body
     try {
         var getShifts = await ShiftModel.find({
-            shiftStartDate: shiftStartDate,
-            shiftEndDate: shiftEndDate
+            shiftDomain: domain,
+            shiftDate: {
+                $gte: year + '-' + month + '-' + '01',
+                $lte: year + '-' + month + '-' + '31'
+            }
         })
+        
         res.status(200).json({ message: 'All shifts', data: getShifts })
     }
     catch (err) {

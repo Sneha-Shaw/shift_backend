@@ -3,7 +3,7 @@ import {
     generateShift,
     createShift,
     getShifts,
-    getShiftsByDate,
+    getShiftsByMonth,
     getShiftsByDoctor,
     getShiftsByDomain,
     updateShift,
@@ -22,7 +22,7 @@ route.post('/generate-shift', generateShift);
 route.post('/create-shift', createShift);
 
 route.get('/get-shifts', getShifts);
-route.get('/get-shifts-by-date', getShiftsByDate);
+route.get('/get-shifts-by-month', getShiftsByMonth);
 route.get('/get-shifts-by-doctor', getShiftsByDoctor);
 route.get('/get-shifts-by-domain', getShiftsByDomain);
 
