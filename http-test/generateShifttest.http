@@ -1,7 +1,7 @@
 POST http://localhost:5000/private/shift/generate-shift
 Content-Type: application/json
 
-{   "domain":"echo",
+{   "domain":"ecg",
     "startDate": "2023-02-01",
     "endDate": "2023-02-27"
 }
@@ -63,11 +63,11 @@ POST http://localhost:5000/private/shift/create-shift
 Content-Type: application/json
 
 {
-    "doctors":[ "63b15b0cf6343140d174e29e","63b15a043727fad53543b77e","63aa9aaa793231a75de33fcd"],
-    "shiftDate": "2023-01-02",
+    "doctors":[ "63b15a043727fad53543b77e","63b05d87afc00d82ddec2833"],
+    "shiftDate": "2023-02-08",
     "shiftDay": "Monday",
     "shiftTime": "10:00 AM - 11:00 AM",
-    "shiftDomain": "echo",
+    "shiftDomain": "ecg",
     "slotId": "63ad32897c917d598f58dc6a"
 }
 
@@ -86,3 +86,8 @@ Content-Type: application/json
     "year": 2023,
     "domain":"echo"
 }
+
+###
+# GET SHIFTS BY DOCTOR
+GET http://localhost:5000/private/shift/get-shifts-by-doctor/63b15a043727fad53543b77e?domain=ECHO
+Content-Type: application/json

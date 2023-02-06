@@ -3,12 +3,13 @@ POST http://localhost:5000/private/availability/add-availability
 Content-Type: application/json
 
 {
-    "id":"63aa9aaa793231a75de33fcd",
+    "id":"63b05d87afc00d82ddec2833",
     "schedule":[
     {
-    "date":"2023-02-02",
-    "start":"4:00 PM",
-    "end":"8:00 PM"
+    "date":"7",
+    "start":"2:00 PM",
+    "end":"7:00 PM",
+    "title":"Available"
     }
     ]
 }

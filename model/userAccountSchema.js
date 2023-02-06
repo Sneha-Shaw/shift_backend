@@ -63,8 +63,7 @@ const userAcSchema = new schema({
                 default: 0
             },
             date: {
-                type: Number,
-                default: 1
+                type: String
             }
         }
     ],
