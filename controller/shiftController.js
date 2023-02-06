@@ -41,6 +41,8 @@ export const generateShift = async (req, res) => {
                 }
             }
         })
+
+
         //  filter getcalendar calendarArray by startdate to end date
         var getCalendarArray = getCalendar.calendarArray.filter((date) => date.dayNumber >= parseInt(startDate.split('-')[2]) && date.dayNumber <= parseInt(endDate.split('-')[2]))
 
@@ -69,10 +71,10 @@ export const generateShift = async (req, res) => {
 
             // traverse through all slots
             for (let j = 0; j < 24; j++) {
-               
+
                 var getSlotArrayIndex = null
                 getSlotArrayIndex = getSlot[j]?.Allotment.indexOf((getSlot[j]?.Allotment.filter((date) => parseInt(date.date) === i)[0]))
-
+               
                 if (getSlotArrayIndex > -1 && getSlotArrayIndex !== null) {
                     if (getSlot[j]?.Allotment[getSlotArrayIndex]?.isFulfilled) {
                         continue;
@@ -81,6 +83,14 @@ export const generateShift = async (req, res) => {
 
                         // traverse through all doctors
                         for (let k = 0; k < getAllDoctorIds.length; k++) {
+
+                            if (getAllDoctor[k]?.AllotmentPerDay?.length === 0) {
+                                getAllDoctor[k].AllotmentPerDay.push({
+                                    date: currentDate,
+                                    dutyHoursAlloted: 0
+                                })
+                                await getAllDoctor[k].save()
+                            }
 
                             if (getSlot[j]?.Allotment[getSlotArrayIndex].DoctorsAlloted < getSlot[j]?.Allotment[getSlotArrayIndex].DoctorsNeeded) {
 
@@ -352,17 +362,17 @@ export const generateShift = async (req, res) => {
 
                                                     // if current date is in getDoctorScheduleArrayDate and current month is ingetDoctorScheduleArrayMonthDate
                                                     if (getDoctorScheduleArrayDate?.includes(i)) {
-                                                      
+
 
                                                         // get current slot
                                                         var currentSlot = getSlot[j].slotTime
                                                         // check if currentSlot is night
                                                         if (getSlot[j].isNight === true) {
-                                                           
+
 
                                                             // check if current doctor has opt for nightDuty
                                                             if (getAllDoctor[k].nightDuty === true) {
-                                                               
+
                                                                 console.log(currentDate, 'currentDate');
                                                                 // check if shift is already in database
                                                                 var checkShift = await ShiftModel.findOne({
