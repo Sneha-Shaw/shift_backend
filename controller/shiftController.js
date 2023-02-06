@@ -74,13 +74,12 @@ export const generateShift = async (req, res) => {
 
                 var getSlotArrayIndex = null
                 getSlotArrayIndex = getSlot[j]?.Allotment.indexOf((getSlot[j]?.Allotment.filter((date) => parseInt(date.date) === i)[0]))
-               
+
                 if (getSlotArrayIndex > -1 && getSlotArrayIndex !== null) {
                     if (getSlot[j]?.Allotment[getSlotArrayIndex]?.isFulfilled) {
                         continue;
                     }
                     else {
-
                         // traverse through all doctors
                         for (let k = 0; k < getAllDoctorIds.length; k++) {
 
@@ -96,19 +95,20 @@ export const generateShift = async (req, res) => {
 
                                 // get doctor id
                                 var doctorId = getAllDoctorIds[k]
+                                var dutyHoursAlloted = getAllDoctor[k]?.AllotmentPerDay?.filter((date) => date.date === currentDate)[0]?.dutyHoursAlloted
+                                dutyHoursAlloted === undefined ? dutyHoursAlloted = 0 : dutyHoursAlloted = dutyHoursAlloted
 
                                 if (getSlot[j]?.Allotment[getSlotArrayIndex].SeniorAlloted < getSlot[j]?.Allotment[getSlotArrayIndex].SeniorNeeded) {
 
                                     // check if dutyHoursAllotedPerMonth of current doctor<dutyHoursPerMonth
                                     if (getAllDoctor[k].dutyHoursAllotedPerMonth <= getAllDoctor[k].dutyHoursPerMonth) {
-                                        // // filter current date in AllotmentPerDay and get dutyHoursAlloted
-                                        var dutyHoursAlloted = getAllDoctor[k]?.AllotmentPerDay?.filter((date) => date.date === currentDate)[0]?.dutyHoursAlloted
-                                        // console.log(dutyHoursAlloted, 'dutyHoursAlloted');
 
                                         // check if dutyHoursAlloted<dutyHoursPerDay
                                         if (dutyHoursAlloted <= getAllDoctor[k].dutyHoursPerDay) {
+
                                             // check if designation of current doctor is senior
                                             if (getAllDoctor[k].designation === 'Senior') {
+
                                                 var getDoctorSchedule = await availabilityScheduleModel.findOne({
                                                     user: doctorId,
                                                     schedule: {
@@ -119,11 +119,11 @@ export const generateShift = async (req, res) => {
                                                 })
 
 
+
                                                 if (!getDoctorSchedule) {
                                                     continue
                                                 }
                                                 else {
-
 
                                                     // get current doctors schedule array 
                                                     var getDoctorScheduleArrayDate = getDoctorSchedule?.schedule?.map((date) => date.date)
@@ -133,8 +133,9 @@ export const generateShift = async (req, res) => {
 
                                                     // if current date is in getDoctorScheduleArrayDate then create shift
                                                     if (getDoctorScheduleArrayDate?.includes(i.toString())) {
-                                                        // get current slot
 
+
+                                                        // get current slot
                                                         var currentSlot = getSlot[j].slotTime
                                                         // check if currentSlot is night
                                                         if (getSlot[j].isNight === true) {
@@ -330,9 +331,6 @@ export const generateShift = async (req, res) => {
 
                                 else {
 
-                                    // filter current date in AllotmentPerDay and get dutyHoursAlloted
-                                    var dutyHoursAlloted = getAllDoctor[k]?.AllotmentPerDay?.filter((date) => date.date === currentDate)[0]?.dutyHoursAlloted
-                                    // console.log(dutyHoursAlloted, 'dutyHoursAlloted');
 
                                     if (getAllDoctor[k].dutyHoursAllotedPerMonth < getAllDoctor[k].dutyHoursPerMonth) {
 
@@ -595,7 +593,9 @@ export const createShift = async (req, res) => {
         var checkShift = await ShiftModel.findOne({
             shiftDate: shiftDate,
             shiftTime: shiftTime,
-            shiftDomain: shiftDomain,
+            shiftDomain: {
+                $in: [shiftDomain.toLowerCase(), shiftDomain.toUpperCase()]
+            },
             doctors: doctors
         })
         if (checkShift) {
@@ -611,6 +611,53 @@ export const createShift = async (req, res) => {
                 slot: slotId
             })
             await createShift.save()
+
+            // get slot
+            const getSlot = await SlotModel.findOne({
+                _id: slotId
+            })
+
+            // get doctor
+            const getDoctor = await userAccount.find({
+                _id: doctors
+            })
+
+            
+
+            // find index of getSlot.Allotment.filter((date) => parseInt(date.date) === new Date(shiftDate).getDate()) in Allotment array
+            var getSlotArrayIndex = getSlot?.Allotment?.map((date) => parseInt(date.date)).indexOf(new Date(shiftDate).getDate())
+
+
+
+            getDoctor.forEach(doctor => {
+                // add 1 to getAllDoctor[k].dutyHoursAllotedPerMonth
+                doctor.dutyHoursAllotedPerMonth = doctor.dutyHoursAllotedPerMonth + 1
+              
+                // add 1 to DoctorsAlloted
+                    getSlot.Allotment[getSlotArrayIndex].DoctorsAlloted = getSlot?.Allotment[getSlotArrayIndex].DoctorsAlloted + 1
+                
+                // add 1 to dutyHoursAllotedPerDay
+                if (doctor?.AllotmentPerDay?.length > 0) {
+                    var getDoctorAllotmentPerDayIndex = doctor?.AllotmentPerDay?.map((date) => date.date).indexOf(shiftDate)
+                    if (getDoctorAllotmentPerDayIndex > -1) {
+                        doctor.AllotmentPerDay[getDoctorAllotmentPerDayIndex].dutyHoursAlloted = doctor.AllotmentPerDay[getDoctorAllotmentPerDayIndex].dutyHoursAlloted + 1
+
+                    }
+                    else {
+                        doctor.AllotmentPerDay.push({
+                            date: shiftDate,
+                            dutyHoursAlloted: 1
+                        })
+
+                    }
+                }
+            });
+
+            await Promise.all(getDoctor.map(async (doctor) => {
+                await doctor.save()
+            }))
+            await getSlot.save()
+
             res.status(200).json({ message: 'Shift created', data: createShift })
         }
     }
