@@ -1,9 +1,4 @@
 # get calender by current month
 
-GET http://localhost:5000/private/calendar/get-calendar
+GET http://localhost:5000/private/calendar/get-calendar?currentMonth=11&year=2022
 Content-Type: application/json
-
-{
-    "currentMonth": 3,
-    "year":2023
-}

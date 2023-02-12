@@ -622,7 +622,7 @@ export const createShift = async (req, res) => {
                 _id: doctors
             })
 
-            
+
 
             // find index of getSlot.Allotment.filter((date) => parseInt(date.date) === new Date(shiftDate).getDate()) in Allotment array
             var getSlotArrayIndex = getSlot?.Allotment?.map((date) => parseInt(date.date)).indexOf(new Date(shiftDate).getDate())
@@ -632,10 +632,10 @@ export const createShift = async (req, res) => {
             getDoctor.forEach(doctor => {
                 // add 1 to getAllDoctor[k].dutyHoursAllotedPerMonth
                 doctor.dutyHoursAllotedPerMonth = doctor.dutyHoursAllotedPerMonth + 1
-              
+
                 // add 1 to DoctorsAlloted
-                    getSlot.Allotment[getSlotArrayIndex].DoctorsAlloted = getSlot?.Allotment[getSlotArrayIndex].DoctorsAlloted + 1
-                
+                getSlot.Allotment[getSlotArrayIndex].DoctorsAlloted = getSlot?.Allotment[getSlotArrayIndex].DoctorsAlloted + 1
+
                 // add 1 to dutyHoursAllotedPerDay
                 if (doctor?.AllotmentPerDay?.length > 0) {
                     var getDoctorAllotmentPerDayIndex = doctor?.AllotmentPerDay?.map((date) => date.date).indexOf(shiftDate)
@@ -697,8 +697,10 @@ export const getShiftsByDomain = async (req, res) => {
 // @route: GET /shift/get-shifts-by-month
 // @purpose: : get routes to get all shifts by date
 export const getShiftsByMonth = async (req, res) => {
-    const { month, year, domain } = req.body
+    const { month, year, domain } = req.query
     try {
+        console.log(req.query);
+        console.log(month, year, domain);
         var getShifts = await ShiftModel.find({
             shiftDomain: domain,
             shiftDate: {

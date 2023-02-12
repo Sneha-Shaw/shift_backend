@@ -64,23 +64,27 @@ export const generateCalendar = async (req, res) => {
 // @route: GET /shift/get-calendar
 // @purpose: : get routes to get calendar of a month for current year and month
 export const getCalendar = async (req, res) => {
-    let { currentMonth } = req.query
+    let { currentMonth,year } = req.query
 
     try {
         // parseint currentmonth
+
         currentMonth = parseInt(currentMonth)
+        year = parseInt(year)
         var getCalendar = await CalendarModel.findOne({
             calendarArray: {
                 $elemMatch: {
-                    dayMonth: currentMonth + 1
+                    dayMonth: currentMonth + 1,
+                    dayYear: year
                 }
             }
         })
         if (!getCalendar) {
-            res.status(404).json({
-                success: false,
+            res.status(200).json({
+                success: true,
                 message: "Calendar not found!"
             })
+
         }
         else {
             res.status(200).json({

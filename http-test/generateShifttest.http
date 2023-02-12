@@ -2,8 +2,8 @@ POST http://localhost:5000/private/shift/generate-shift
 Content-Type: application/json
 
 {   "domain":"ecg",
-    "startDate": "2023-02-11",
-    "endDate": "2023-02-15"
+    "startDate": "2023-02-16",
+    "endDate": "2023-02-18"
 }
 
 ###
@@ -82,7 +82,7 @@ GET http://localhost:5000/private/shift/get-shifts-by-month
 Content-Type: application/json
 
 {
-    "month": 2,
+    "month": 1,
     "year": 2023,
     "domain":"echo"
 }
