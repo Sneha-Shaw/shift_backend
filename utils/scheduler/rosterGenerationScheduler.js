@@ -4,12 +4,19 @@ import {
     generateShift
 } from '../../controller/shiftController.js'
 import domainModel from '../../model/DomainSchema.js'
+import userAccount from '../../model/userAccountSchema.js'
 
 export const rosterGenerationScheduler = async () => {
-    // schedule.scheduleJob('0 0 1 * *', async () => {
 
     // schedule job to run at 12:00 AM of last day of every month
     schedule.scheduleJob('0 0 1 * *', async () => {
+    // schedule.scheduleJob('29 * * * *', async () => {
+        // set all doctors duty hours alloted to 0
+        await userAccount.updateMany({
+            $set: {
+                dutyHoursAllotedPerMonth: 0
+            }
+        })
         console.log('Roster Generation Scheduler Started');
         // get all domains
         const domains = await domainModel.find()

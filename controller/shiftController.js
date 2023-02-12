@@ -101,10 +101,10 @@ export const generateShift = async (req, res) => {
                                 if (getSlot[j]?.Allotment[getSlotArrayIndex].SeniorAlloted < getSlot[j]?.Allotment[getSlotArrayIndex].SeniorNeeded) {
 
                                     // check if dutyHoursAllotedPerMonth of current doctor<dutyHoursPerMonth
-                                    if (getAllDoctor[k].dutyHoursAllotedPerMonth <= getAllDoctor[k].dutyHoursPerMonth) {
+                                    if (getAllDoctor[k].dutyHoursAllotedPerMonth < getAllDoctor[k].dutyHoursPerMonth) {
 
                                         // check if dutyHoursAlloted<dutyHoursPerDay
-                                        if (dutyHoursAlloted <= getAllDoctor[k].dutyHoursPerDay) {
+                                        if (dutyHoursAlloted < getAllDoctor[k].dutyHoursPerDay) {
 
                                             // check if designation of current doctor is senior
                                             if (getAllDoctor[k].designation === 'Senior') {
@@ -334,7 +334,7 @@ export const generateShift = async (req, res) => {
 
                                     if (getAllDoctor[k].dutyHoursAllotedPerMonth < getAllDoctor[k].dutyHoursPerMonth) {
 
-                                        if (dutyHoursAlloted <= getAllDoctor[k].dutyHoursPerDay) {
+                                        if (dutyHoursAlloted < getAllDoctor[k].dutyHoursPerDay) {
                                             // check if designation of current doctor is regular
                                             if (getAllDoctor[k].designation === 'Regular') {
                                                 // get doctor schedule
@@ -560,7 +560,6 @@ export const generateShift = async (req, res) => {
                                 await getSlot[j].save()
                             }
 
-
                         }
                     }
                 }
@@ -699,8 +698,6 @@ export const getShiftsByDomain = async (req, res) => {
 export const getShiftsByMonth = async (req, res) => {
     const { month, year, domain } = req.query
     try {
-        console.log(req.query);
-        console.log(month, year, domain);
         var getShifts = await ShiftModel.find({
             shiftDomain: domain,
             shiftDate: {
@@ -710,6 +707,7 @@ export const getShiftsByMonth = async (req, res) => {
         })
 
         res.status(200).json({ message: 'All shifts', data: getShifts })
+
     }
     catch (err) {
         res.status(400).json({ message: err.message })
